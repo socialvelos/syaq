@@ -4591,12 +4591,13 @@
       notify(currentAppLang === 'ar' ? 'تمت استعادة الإعدادات الافتراضية ✓' : 'Defaults restored ✓');
     };
 
-// 9. محرك وضع الشاشة فائق السرعة والثبات (تثبيت ذكي يمنع اختفاء الترجمة + استجابة فورية)
+// 9. محرك وضع الشاشة المزدوج (مسار مستقل للحوارات السفلية + بطاقات مستقلة للقوائم والإشعارات + سجل حوارات حي)
     window.lastSentScreenOverlaySignature = '';
     window.latestTvFrameSeq = 0;
     window.lastNonEmptyScreenItems = [];
     window.lastNonEmptyScreenTime = 0;
     window.SCREEN_EMPTY_HOLD_MS = 850;
+    window.tvLiveDialogueHistory = [];
 
     // قاموس فوري لأوامر القوائم والألعاب والتلفزيون (ترجمة في 0ms بدون انتظار الإنترنت)
     Object.assign(INSTANT_GAMING_SHORT_PHRASES, {
@@ -4699,14 +4700,68 @@
     });
 
     subStyleConfig.smartHalfPlacement = true;
+    subStyleConfig.dualLaneScreenMode = true;
     subStyleConfig.placeBelowOriginal = false;
     subStyleConfig.translatorEngine = activeTranslator;
+
+    // حقن بطاقة "سجل الحوارات الفوري" داخل واجهة وضع الشاشة في الجوال لعرض آخر 5 حوارات مترجمة
+    (function injectTvDialogueHistoryCard() {
+      var screenWorkspace = document.getElementById('tvScreenModeWorkspace');
+      if (!screenWorkspace || document.getElementById('tvDialogueLogBox')) return;
+      var statusCard = screenWorkspace.firstElementChild;
+      if (!statusCard) return;
+
+      var logHtml = '' +
+        '<div id="tvDialogueLogBox" class="hidden w-full mt-3 pt-3 border-t border-[var(--border-col)] text-right space-y-1.5">' +
+          '<div class="flex items-center justify-between text-[11px] font-black text-cosmo">' +
+            '<span>سجل الحوارات الفوري</span>' +
+            '<button type="button" onclick="clearTvDialogueHistory()" class="text-[10px] font-extrabold text-[var(--text-muted)]">مسح</button>' +
+          '</div>' +
+          '<div id="tvDialogueLogList" class="space-y-1.5 max-h-36 overflow-y-auto no-scrollbar text-xs font-extrabold text-[var(--text-main)] leading-relaxed"></div>' +
+        '</div>';
+      statusCard.insertAdjacentHTML('beforeend', logHtml);
+    })();
+
+    window.appendTvDialogueHistory = function(arLine) {
+      var clean = String(arLine || '').trim();
+      if (!clean) return;
+      if (window.tvLiveDialogueHistory.length > 0 && window.tvLiveDialogueHistory[0] === clean) return;
+
+      window.tvLiveDialogueHistory.unshift(clean);
+      if (window.tvLiveDialogueHistory.length > 5) {
+        window.tvLiveDialogueHistory.length = 5;
+      }
+
+      var box = document.getElementById('tvDialogueLogBox');
+      var listEl = document.getElementById('tvDialogueLogList');
+      if (!box || !listEl) return;
+
+      box.classList.remove('hidden');
+      listEl.innerHTML = '';
+      for (var i = 0; i < window.tvLiveDialogueHistory.length; i++) {
+        var row = document.createElement('div');
+        row.className = i === 0
+          ? 'py-1.5 px-2.5 rounded-xl bg-[#F5A623]/12 border border-[#F5A623]/30 text-[var(--text-main)]'
+          : 'py-1 px-2.5 rounded-xl bg-black/20 text-[var(--text-muted)] opacity-85';
+        row.textContent = window.tvLiveDialogueHistory[i];
+        listEl.appendChild(row);
+      }
+    };
+
+    window.clearTvDialogueHistory = function() {
+      window.tvLiveDialogueHistory = [];
+      var box = document.getElementById('tvDialogueLogBox');
+      var listEl = document.getElementById('tvDialogueLogList');
+      if (listEl) listEl.innerHTML = '';
+      if (box) box.classList.add('hidden');
+    };
 
     if (!window._siyaqStylePatched) {
       window._siyaqStylePatched = true;
       var _origApplySubtitleStyles = applySubtitleStyles;
       applySubtitleStyles = function() {
         subStyleConfig.smartHalfPlacement = true;
+        subStyleConfig.dualLaneScreenMode = true;
         subStyleConfig.translatorEngine = activeTranslator;
         window.lastSentScreenOverlaySignature = '';
         _origApplySubtitleStyles();
@@ -4730,6 +4785,19 @@
       };
     }
 
+    // استقبال مزامنة سجل الحوارات الفوري من التلفزيون عند الترجمة المباشرة السريعة
+    if (!window._siyaqDialogueListenerAdded && mqttClient) {
+      window._siyaqDialogueListenerAdded = true;
+      mqttClient.on('message', function(topic, payload) {
+        try {
+          var msg = JSON.parse(payload.toString());
+          if (msg && msg.sender === 'tv' && msg.type === 'DIALOGUE_LOG_SYNC' && isTvPaired) {
+            if (msg.ar) window.appendTvDialogueHistory(msg.ar);
+          }
+        } catch (e) {}
+      });
+    }
+
     cleanScreenBlockText = function(rawText) {
       if (!rawText) return '';
       var str = String(rawText).trim();
@@ -4747,7 +4815,7 @@
       return cleaned;
     };
 
-    // ترجمة فائقة السرعة لوضع الشاشة: قاموس 0ms + ذاكرة 0ms + سباق متوازي عبر 3 خوادم في نفس اللحظة
+    // ترجمة متوازية فائقة السرعة للمسارين (مسار الحوارات السفلية + مسار القوائم والإشعارات)
     translateScreenBatchInstant = async function(englishList) {
       var results = new Array(englishList.length).fill('');
       var tasks = [];
@@ -4794,7 +4862,7 @@
       return results;
     };
 
-    // معالجة نصوص الشاشة مع تثبيت مواقعها ومنع اختفائها المتكرر
+    // معالجة نصوص الشاشة بنظام المسار المزدوج (dialogue vs hud) مع تثبيت الإحداثيات
     handleIncomingTvScreenTextBlocks = async function(packet) {
       var frameSeq = Number(packet.frameSeq || packet.frameId || Date.now());
       if (frameSeq < window.latestTvFrameSeq) return;
@@ -4815,7 +4883,7 @@
         var validBlocks = [];
         var textsToTranslate = [];
         var preResolvedArabic = {};
-        var maxBlocks = Math.min(rawBlocks.length, 10);
+        var maxBlocks = Math.min(rawBlocks.length, 12);
 
         for (var i = 0; i < maxBlocks; i++) {
           var b = rawBlocks[i];
@@ -4823,13 +4891,15 @@
           if (!cleanEn) continue;
 
           var coords = normalizeBlockCoordinates(b, screenW, screenH);
-          var stableId = b.id || buildStableSpatialId(coords, i);
-          var posKey = Math.round(coords.x * 16) + '_' + Math.round(coords.y * 16);
+          var lane = b.lane || ((coords.y >= 0.68 && coords.x >= 0.12 && (coords.x + coords.w) <= 0.88) ? 'dialogue' : 'hud');
+          var stableId = b.id || (lane + '_' + buildStableSpatialId(coords, i));
+          var posKey = lane + '_' + Math.round(coords.x * 16) + '_' + Math.round(coords.y * 16);
 
           var matchedMem = screenOverlayMemory.get(posKey);
           if (!matchedMem || !isSameSubtitleLocked(cleanEn, matchedMem.en)) {
             screenOverlayMemory.forEach(function(memVal) {
               if (!matchedMem &&
+                memVal.lane === lane &&
                 Math.abs(memVal.coords.x - coords.x) < 0.09 &&
                 Math.abs(memVal.coords.y - coords.y) < 0.07 &&
                 isSameSubtitleLocked(cleanEn, memVal.en)
@@ -4844,6 +4914,7 @@
             validBlocks.push({
               id: stableId,
               posKey: posKey,
+              lane: lane,
               en: matchedMem.en,
               x: matchedMem.coords.x,
               y: matchedMem.coords.y,
@@ -4858,6 +4929,7 @@
             validBlocks.push({
               id: stableId,
               posKey: posKey,
+              lane: lane,
               en: cleanEn,
               x: coords.x,
               y: coords.y,
@@ -4915,7 +4987,12 @@
 
             if (!ar) continue;
 
+            if (blk.lane === 'dialogue') {
+              window.appendTvDialogueHistory(ar);
+            }
+
             newMemoryMap.set(blk.posKey, {
+              lane: blk.lane,
               en: blk.en,
               ar: ar,
               coords: { x: blk.x, y: blk.y, w: blk.w, h: blk.h }
@@ -4923,6 +5000,7 @@
 
             overlayItems.push({
               id: blk.id,
+              lane: blk.lane,
               en: blk.en,
               ar: ar,
               x: blk.x,
@@ -4938,7 +5016,7 @@
           window.lastNonEmptyScreenItems = overlayItems;
 
           var currentSignature = overlayItems
-            .map(function(it) { return it.ar + '@' + it.x.toFixed(2) + ',' + it.y.toFixed(2); })
+            .map(function(it) { return it.lane + ':' + it.ar + '@' + it.x.toFixed(2) + ',' + it.y.toFixed(2); })
             .join('|');
 
           if (currentSignature !== window.lastSentScreenOverlaySignature) {
