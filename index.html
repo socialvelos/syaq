@@ -4591,11 +4591,8 @@
       notify(currentAppLang === 'ar' ? 'تمت استعادة الإعدادات الافتراضية ✓' : 'Defaults restored ✓');
     };
 
-    // 9. محرك وضع الشاشة المدمج بجودة وسرعة وفلاتر النسخة الذهبية (محمي ضد التعارض)
+// 9. محرك وضع الشاشة الفوري والدقيق (بدون ثواني تقديرية وبدون وميض)
     window.lastSentScreenOverlaySignature = '';
-    window.lastValidScreenOverlayItems = [];
-    window.lastScreenTextSeenAt = 0;
-    window.SCREEN_EMPTY_HOLD_MS = 700;
 
     subStyleConfig.smartHalfPlacement = true;
     subStyleConfig.placeBelowOriginal = false;
@@ -4610,13 +4607,25 @@
       };
     }
 
+    // تنظيف مرن يقبل جميع كلمات وعبارات الشاشة والقوائم (القصيرة والطويلة) ويستبعد الحروف العربية فقط
     cleanScreenBlockText = function(rawText) {
       if (!rawText) return '';
       var str = String(rawText).trim();
       if (/[\u0600-\u06FF]/.test(str)) return '';
-      return extractPureSubtitleSentence(str);
+
+      var cleaned = str
+        .replace(/[\r\n]+/g, ' ')
+        .replace(/[^a-zA-Z0-9.,?!'"\-:;()/&\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!cleaned) return '';
+      var alphaCount = (cleaned.match(/[a-zA-Z]/g) || []).length;
+      if (alphaCount < 2) return '';
+      return cleaned;
     };
 
+    // ترجمة فائقة السرعة لوضع الشاشة: القاموس الفوري (0ms) + الذاكرة المقفلة (0ms) + السباق المتوازي
     translateScreenBatchInstant = async function(englishList) {
       var results = new Array(englishList.length).fill('');
       var pendingTasks = [];
@@ -4650,7 +4659,7 @@
               if (ar) {
                 results[idx] = ar;
                 recentSubtitleLocks.unshift({ eng: en, ar: ar });
-                if (recentSubtitleLocks.length > 60) recentSubtitleLocks.pop();
+                if (recentSubtitleLocks.length > 80) recentSubtitleLocks.pop();
               }
             })
           );
@@ -4663,6 +4672,7 @@
       return results;
     };
 
+    // معالجة نصوص الشاشة وتثبيت مواقعها وإرسال التغييرات الحقيقية فقط للتلفاز
     handleIncomingTvScreenTextBlocks = async function(packet) {
       if (isProcessingScreenBatch) {
         pendingScreenPacket = packet;
@@ -4679,7 +4689,7 @@
         var validBlocks = [];
         var textsToTranslate = [];
         var preResolvedArabic = {};
-        var maxBlocks = Math.min(rawBlocks.length, 8);
+        var maxBlocks = Math.min(rawBlocks.length, 10);
 
         for (var i = 0; i < maxBlocks; i++) {
           var b = rawBlocks[i];
@@ -4688,14 +4698,14 @@
 
           var coords = normalizeBlockCoordinates(b, screenW, screenH);
           var stableId = b.id || buildStableSpatialId(coords, i);
-          var posKey = Math.round(coords.x * 12) + '_' + Math.round(coords.y * 12);
+          var posKey = Math.round(coords.x * 16) + '_' + Math.round(coords.y * 16);
 
           var matchedMem = screenOverlayMemory.get(posKey);
           if (!matchedMem || !isSameSubtitleLocked(cleanEn, matchedMem.en)) {
             screenOverlayMemory.forEach(function(memVal) {
               if (!matchedMem &&
-                Math.abs(memVal.coords.x - coords.x) < 0.14 &&
-                Math.abs(memVal.coords.y - coords.y) < 0.10 &&
+                Math.abs(memVal.coords.x - coords.x) < 0.10 &&
+                Math.abs(memVal.coords.y - coords.y) < 0.08 &&
                 isSameSubtitleLocked(cleanEn, memVal.en)
               ) {
                 matchedMem = memVal;
@@ -4731,12 +4741,7 @@
         }
 
         if (validBlocks.length === 0) {
-          if (window.lastValidScreenOverlayItems.length > 0 && (Date.now() - window.lastScreenTextSeenAt) < window.SCREEN_EMPTY_HOLD_MS) {
-            isProcessingScreenBatch = false;
-            return;
-          }
           screenOverlayMemory.clear();
-          window.lastValidScreenOverlayItems = [];
           if (window.lastSentScreenOverlaySignature !== 'EMPTY') {
             window.lastSentScreenOverlaySignature = 'EMPTY';
             sendCrossDeviceEvent({
@@ -4747,7 +4752,6 @@
             });
           }
         } else {
-          window.lastScreenTextSeenAt = Date.now();
           var newlyTranslatedList = textsToTranslate.length > 0
             ? await translateScreenBatchInstant(textsToTranslate)
             : [];
@@ -4782,7 +4786,6 @@
           }
 
           screenOverlayMemory = newMemoryMap;
-          window.lastValidScreenOverlayItems = overlayItems;
 
           var currentSignature = overlayItems
             .map(function(it) { return it.ar + '@' + it.x.toFixed(2) + ',' + it.y.toFixed(2); })
