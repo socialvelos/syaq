@@ -52,12 +52,11 @@
 
     body {
       font-family: 'Tajawal', sans-serif;
-      font-weight: 700;
       background-color: var(--bg-page);
       color: var(--text-main);
       margin: 0;
       padding: 0;
-      min-height: 100dvh;
+      min-height: 100vh;
       overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
@@ -95,7 +94,7 @@
       color: #D98200 !important;
     }
 
-    button:not(.color-swatch-btn):not(.engine-choice-row):not(.ui-pill-btn):not(.ios-switch) {
+    button:not(.color-swatch-btn):not(.engine-choice-row) {
       background: transparent !important;
       background-color: transparent !important;
       box-shadow: none !important;
@@ -105,7 +104,7 @@
       outline: none !important;
     }
 
-    button:not(.color-swatch-btn):not(.ios-switch):active {
+    button:not(.color-swatch-btn):active {
       transform: scale(0.96);
     }
 
@@ -138,81 +137,6 @@
       accent-color: #F5A623;
     }
 
-    /* أزرار التبديل العائمة (iOS Switch) واضحة بلون هوية التطبيق في الوضعين الداكن والفاتح */
-    .ios-switch {
-      position: relative;
-      width: 46px;
-      height: 26px;
-      border-radius: 9999px;
-      background-color: #272732 !important;
-      border: 1px solid #3F3F4E !important;
-      transition: background-color 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      padding: 2px;
-      flex-shrink: 0;
-    }
-
-    html.light .ios-switch {
-      background-color: #CBD5E1 !important;
-      border: 1px solid #94A3B8 !important;
-    }
-
-    .ios-switch.active,
-    html.light .ios-switch.active {
-      background-color: #F5A623 !important;
-      border-color: #D98200 !important;
-    }
-
-    .ios-switch-knob {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background-color: #FFFFFF !important;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.38);
-      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-      transform: translateX(0);
-      pointer-events: none;
-    }
-
-    [dir="rtl"] .ios-switch .ios-switch-knob {
-      transform: translateX(0px);
-    }
-    [dir="rtl"] .ios-switch.active .ios-switch-knob {
-      transform: translateX(-20px);
-    }
-    [dir="ltr"] .ios-switch .ios-switch-knob {
-      transform: translateX(0px);
-    }
-    [dir="ltr"] .ios-switch.active .ios-switch-knob {
-      transform: translateX(20px);
-    }
-
-    /* حركة انزلاق الإعدادات والنوافذ من الأسفل: أكثر سلاسة وأبطأ قليلاً */
-    .sheet-modal-backdrop {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.42s ease;
-    }
-
-    .sheet-modal-backdrop.modal-open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    .sheet-modal-panel {
-      transform: translateY(105%);
-      transition: transform 0.48s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
-    }
-
-    .sheet-modal-backdrop.modal-open .sheet-modal-panel {
-      transform: translateY(0);
-    }
-
     #motionSplashScreen {
       background-color: #050507;
       transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.45s ease;
@@ -241,25 +165,22 @@
       animation: focusRingPop 0.55s ease-out forwards;
     }
 
-    /* صندوق الترجمة المتوازن — يمنع انقسام السطر كل كلمتين ويجعل الأسطر مريحة وموزونة */
+    /* صندوق الترجمة المتوازن والمطابق لحدود النص (مثل Red Dead) */
     .balanced-sub-box {
-      width: max-content;
-      max-width: 92%;
+      width: fit-content;
+      max-width: 85%;
       box-sizing: border-box;
       border-radius: 0px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      transition: background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     .balanced-sub-text {
-      line-height: 1.5;
-      word-break: normal;
-      overflow-wrap: break-word;
+      line-height: 1.38;
+      word-break: break-word;
       white-space: pre-wrap;
-      text-wrap: balance;
       margin: 0;
     }
 
@@ -270,7 +191,7 @@
 
 <body>
 
-  <!-- ================= 0. شاشة الموشن جرافيك الاحترافية (SIYAQ -> سياق) بدون تداخل حرف القاف وباتصال متناسق مع الياء ================= -->
+  <!-- ================= 0. شاشة الموشن جرافيك الاحترافية (SIYAQ -> سياق) ================= -->
   <div id="motionSplashScreen" onclick="handleSplashClick(this)" class="fixed inset-0 z-[200] bg-[#050507] flex items-center justify-center overflow-hidden cursor-pointer select-none">
     <div id="splashBrandText" class="relative z-10 flex items-center justify-center" dir="ltr">
       <svg id="splashMorphSvg" class="h-24 sm:h-28 w-auto shrink-0" viewBox="6 26 88 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SIYAQ">
@@ -322,10 +243,10 @@
   </div>
 
   <!-- ================= الواجهة الرئيسية ================= -->
-  <div id="mainAppContainer" class="w-full max-w-md mx-auto min-h-[100dvh] flex flex-col justify-between pb-4 relative">
+  <div id="mainAppContainer" class="w-full max-w-md mx-auto min-h-screen flex flex-col justify-between pb-6 relative">
 
     <!-- 1. الشريط العلوي -->
-    <header class="w-full cosmo-header-gradient pt-2.5 pb-1.5 px-4 sticky top-0 z-30 shrink-0">
+    <header class="w-full cosmo-header-gradient pt-4 pb-3 px-4 sticky top-0 z-30">
       <div class="grid grid-cols-3 items-center" dir="ltr">
         <div class="flex items-center justify-start">
           <button onclick="openView('settingsMainModal')" class="icon-tap py-1.5 px-2 flex items-center justify-center transition text-cosmo font-black text-sm" title="الإعدادات">
@@ -337,7 +258,7 @@
         </div>
 
         <div class="flex items-center justify-center">
-          <svg class="h-6 w-auto" viewBox="8 28 84 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SIYAQ">
+          <svg class="h-7 w-auto" viewBox="8 28 84 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SIYAQ">
             <defs>
               <linearGradient id="siyaqHeaderGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stop-color="#F1AB4C" />
@@ -362,117 +283,86 @@
     </header>
 
     <!-- 2. جسم التطبيق -->
-    <main class="flex-1 px-4 pt-1 flex flex-col gap-2.5">
+    <main class="flex-1 px-4 pt-2 flex flex-col gap-3">
 
-      <!-- محدد الوضعين الرئيسي -->
-      <div class="py-1 px-2 flex items-center justify-around border-b border-[var(--border-col)] shrink-0">
-        <button id="tabBtnPhone" onclick="switchMode('phone')" class="flex-1 py-1.5 text-cosmo font-black text-sm flex items-center justify-center gap-2 transition-all">
+      <!-- محدد الوضعين -->
+      <div class="py-1.5 px-2 flex items-center justify-around border-b border-[var(--border-col)]">
+        <button id="tabBtnPhone" onclick="switchMode('phone')" class="flex-1 py-2 text-cosmo font-black text-sm flex items-center justify-center gap-2 transition-all">
           <i class="fa-solid fa-mobile-screen-button"></i>
           <span data-i18n="modePhone">الهاتف (مجاني)</span>
         </button>
 
-        <button id="tabBtnTv" onclick="switchMode('tv')" class="flex-1 py-1.5 font-extrabold text-sm text-[var(--text-muted)] flex items-center justify-center gap-2 transition-all">
+        <button id="tabBtnTv" onclick="switchMode('tv')" class="flex-1 py-2 font-bold text-sm text-[var(--text-muted)] flex items-center justify-center gap-2 transition-all">
           <i class="fa-solid fa-tv"></i>
           <span data-i18n="modeTv">تلفاز (احترافي)</span>
         </button>
       </div>
 
-      <!-- خيارا وضع التلفاز بدون أيقونات بجانب الاسم (الأيقونة تظهر في واجهة كل وضع) -->
-      <div id="tvSubModeSelectorBar" class="hidden grid grid-cols-2 gap-2 p-1 rounded-2xl clean-surface border border-[var(--border-col)] shrink-0">
-        <button id="tvSubBtnCamera" onclick="selectTvSubMode('camera')" class="ui-pill-btn py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center transition-all" style="background-color: rgba(245, 166, 35, 0.15); color: #F5A623; border: 1px solid rgba(245, 166, 35, 0.38);">
-          <span data-i18n="tvSubModeCamera">وضع الكاميرا</span>
-        </button>
-
-        <button id="tvSubBtnScreen" onclick="selectTvSubMode('screen')" class="ui-pill-btn py-2 px-3 rounded-xl text-xs font-extrabold flex items-center justify-center transition-all" style="background-color: transparent; color: var(--text-muted); border: 1px solid transparent;">
-          <span data-i18n="tvSubModeScreen">وضع الشاشة</span>
-        </button>
-      </div>
-
-      <!-- زر بدء التجربة المجانية (ساعتين) -->
-      <div id="trialActivationBox" class="hidden py-1 px-1 flex items-center justify-center shrink-0">
-        <button onclick="activateManualFreeTrial()" class="py-1 px-4 text-cosmo text-xs font-black active:scale-95 transition">
+      <!-- زر بدء التجربة المجانية (ساعتين) في المنتصف بدون شرح -->
+      <div id="trialActivationBox" class="hidden py-2 px-1 flex items-center justify-center">
+        <button onclick="activateManualFreeTrial()" class="py-1.5 px-4 text-cosmo text-xs font-black active:scale-95 transition">
           <span data-i18n="startFreeTrialBtn">بدء التجربة المجانية</span>
         </button>
       </div>
 
-      <!-- شريط المتبقي من التجربة بصيغة 2h 00m -->
-      <div id="trialBanner" class="hidden py-1 px-1 flex items-center justify-between shrink-0">
+      <div id="trialBanner" class="hidden py-1 px-1 flex items-center justify-between">
         <div class="flex items-center gap-1.5 text-xs font-extrabold text-[var(--text-muted)]">
           <i class="fa-solid fa-clock text-cosmo"></i>
-          <span data-i18n="trialRemainingMsg">المتبقي من التجربة:</span>
+          <span data-i18n="trialRemainingMsg">وقت التجربة المتبقي لوضع التلفاز:</span>
         </div>
-        <span id="trialTimerText" class="text-xs font-mono font-black text-cosmo" dir="ltr">2h 00m</span>
+        <span id="trialTimerText" class="text-xs font-mono font-black text-cosmo">120:00</span>
       </div>
 
       <!-- ================= شاشة 1: وضع اقتران التلفاز ================= -->
-      <div id="tvUnpairedSection" class="hidden flex-1 flex flex-col justify-center items-center text-center py-4 gap-5">
-
+      <div id="tvUnpairedSection" class="hidden flex-1 flex flex-col justify-center items-center text-center py-8 gap-7">
         <div class="flex items-center justify-center">
-          <!-- أيقونة وضع الكاميرا: جوال وخلفه شاشة تلفاز -->
-          <svg id="heroIconCameraMode" class="w-20 h-20" viewBox="0 0 64 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="6" width="42" height="28" rx="4.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3" opacity="0.85"/>
-            <path d="M16 40 H34" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
-            <rect x="36" y="15" width="22" height="36" rx="4.5" fill="var(--bg-page)" stroke="#F5A623" stroke-width="3.2"/>
-            <circle cx="47" cy="29" r="4.5" stroke="#F5A623" stroke-width="2.5"/>
-            <circle cx="47" cy="29" r="1.6" fill="#F5A623"/>
-            <path d="M43 45 H51" stroke="#F5A623" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
-
-          <!-- أيقونة وضع الشاشة: شاشة تلفاز وفيها شرائط ترجمة بدون كتابة -->
-          <svg id="heroIconScreenMode" class="hidden w-20 h-20" viewBox="0 0 64 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="5" y="6" width="54" height="36" rx="5.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3.2"/>
-            <path d="M21 48 H43" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3.2" stroke-linecap="round"/>
-            <rect x="12" y="13" width="18" height="4.2" rx="2.1" fill="#F5A623" opacity="0.9"/>
-            <rect x="12" y="20.5" width="13" height="3.8" rx="1.9" fill="#F5A623" opacity="0.65"/>
-            <rect x="17" y="31" width="30" height="4.8" rx="2.4" fill="#F5A623"/>
+          <svg class="w-16 h-16" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M8 20 V12 C8 9.8 9.8 8 12 8 H20" stroke="#F5A623" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M44 8 H52 C54.2 8 56 9.8 56 12 V20" stroke="#F5A623" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M56 44 V52 C56 54.2 54.2 56 52 56 H44" stroke="#F5A623" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M20 56 H12 C9.8 56 8 54.2 8 52 V44" stroke="#F5A623" stroke-width="3.5" stroke-linecap="round"/>
+            <rect x="16" y="16" width="12" height="12" rx="2.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3"/>
+            <rect x="20.5" y="20.5" width="3" height="3" fill="#F5A623"/>
+            <rect x="36" y="16" width="12" height="12" rx="2.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3"/>
+            <rect x="40.5" y="20.5" width="3" height="3" fill="#F5A623"/>
+            <rect x="16" y="36" width="12" height="12" rx="2.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3"/>
+            <rect x="20.5" y="40.5" width="3" height="3" fill="#F5A623"/>
+            <rect x="36" y="36" width="5" height="5" rx="1" fill="currentColor" class="text-[var(--text-main)]"/>
+            <rect x="43" y="43" width="5" height="5" rx="1" fill="currentColor" class="text-[var(--text-main)]"/>
+            <rect x="36" y="43" width="4" height="5" rx="1" fill="#F5A623"/>
+            <rect x="43" y="36" width="5" height="4" rx="1" fill="#F5A623"/>
           </svg>
         </div>
 
-        <h3 id="pairTvDynamicTitle" data-i18n="pairTvTitle" class="text-base font-black">وضع الكاميرا</h3>
+        <h3 data-i18n="pairTvTitle" class="text-base font-black">اقتران التلفاز</h3>
 
-        <div class="w-full space-y-4 pt-1">
-          <!-- أيقونة الكود صغيرة فوق مسح الرمز من شاشة التلفاز -->
-          <button onclick="openRealQrScanner()" class="w-full py-2.5 text-cosmo font-black text-base flex flex-col items-center justify-center gap-2 active:scale-95 transition">
-            <svg class="w-6 h-6" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M8 20 V12 C8 9.8 9.8 8 12 8 H20" stroke="#F5A623" stroke-width="4.2" stroke-linecap="round"/>
-              <path d="M44 8 H52 C54.2 8 56 9.8 56 12 V20" stroke="#F5A623" stroke-width="4.2" stroke-linecap="round"/>
-              <path d="M56 44 V52 C56 54.2 54.2 56 52 56 H44" stroke="#F5A623" stroke-width="4.2" stroke-linecap="round"/>
-              <path d="M20 56 H12 C9.8 56 8 54.2 8 52 V44" stroke="#F5A623" stroke-width="4.2" stroke-linecap="round"/>
-              <rect x="16" y="16" width="12" height="12" rx="2.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3.2"/>
-              <rect x="36" y="16" width="12" height="12" rx="2.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3.2"/>
-              <rect x="16" y="36" width="12" height="12" rx="2.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3.2"/>
-              <rect x="36" y="36" width="12" height="12" rx="2.5" fill="#F5A623"/>
-            </svg>
+        <div class="w-full space-y-5 pt-3">
+          <button onclick="openRealQrScanner()" class="w-full py-3.5 text-cosmo font-black text-base flex items-center justify-center active:scale-95 transition">
             <span data-i18n="scanQrBtn">مسح الرمز من شاشة التلفاز</span>
           </button>
 
-          <button onclick="openView('tvGuideModal')" class="w-full py-2 text-cosmo font-extrabold text-xs flex items-center justify-center gap-2 active:scale-95 transition opacity-90">
+          <button onclick="openView('tvGuideModal')" class="w-full py-3 text-cosmo font-extrabold text-xs flex items-center justify-center gap-2 active:scale-95 transition opacity-90">
             <i class="fa-solid fa-circle-info"></i>
             <span data-i18n="tvDownloadHubBtn">طريقة تحميل تطبيق سياق للتلفزيون</span>
           </button>
         </div>
       </div>
 
-      <!-- ================= شاشة 2-أ: الكاميرا المباشرة والترجمة (حجم الكاميرا ثابت لا يصغر عند بدء الترجمة) ================= -->
-      <div id="cameraWorkspaceSection" class="flex-1 flex flex-col gap-2.5">
+      <!-- ================= شاشة 2: الكاميرا المباشرة والترجمة ================= -->
+      <div id="cameraWorkspaceSection" class="flex-1 flex flex-col gap-3">
 
-        <!-- نافذة الكاميرا بحجمها الكامل الثابت (w-full h-52) حتى أثناء الترجمة لضمان أقصى دقة قراءة -->
-        <div id="cameraBox" onclick="triggerTapToFocus(event, this)" class="relative w-full h-52 bg-black rounded-3xl overflow-hidden border border-[var(--border-col)] shrink-0 mx-auto cursor-pointer">
+        <!-- نافذة الكاميرا -->
+        <div id="cameraBox" onclick="triggerTapToFocus(event, this)" class="relative w-full h-56 bg-black rounded-3xl overflow-hidden border border-[var(--border-col)] shrink-0 transition-all duration-300 mx-auto cursor-pointer">
           <video id="mainVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
-          <canvas id="camColorSampleCanvas" width="32" height="16" class="hidden"></canvas>
 
           <!-- شاشة بدء تشغيل الكاميرا -->
           <div id="camCover" class="absolute inset-0 clean-surface flex flex-col items-center justify-center p-4 text-center z-20">
             <button onclick="startCameraFeed(); event.stopPropagation();" class="py-3 px-5 text-cosmo font-black text-sm active:scale-95 transition flex flex-col items-center gap-3">
               <svg class="w-12 h-12" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M10 21 V14 C10 11.8 11.8 10 14 10 H21" stroke="#F5A623" stroke-width="2.8" stroke-linecap="round"/>
-                <path d="M43 10 H50 C52.2 10 54 11.8 54 14 V21" stroke="#F5A623" stroke-width="2.8" stroke-linecap="round"/>
-                <path d="M54 43 V50 C54 52.2 52.2 54 50 54 H43" stroke="#F5A623" stroke-width="2.8" stroke-linecap="round"/>
-                <path d="M21 54 H14 C11.8 54 10 52.2 10 50 V43" stroke="#F5A623" stroke-width="2.8" stroke-linecap="round"/>
-                <circle cx="32" cy="32" r="14" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="2.8"/>
-                <circle cx="32" cy="32" r="8.5" stroke="#F5A623" stroke-width="2.4" stroke-dasharray="10 4"/>
-                <circle cx="32" cy="32" r="3.5" fill="#F5A623"/>
-                <circle cx="38.5" cy="25.5" r="1.8" fill="#FFFFFF"/>
+                <path d="M10 22 C10 18.7 12.7 16 16 16 H22 L26 11 H38 L42 16 H48 C51.3 16 54 18.7 54 22 V46 C54 49.3 51.3 52 48 52 H16 C12.7 52 10 49.3 10 46 V22 Z" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3.2" stroke-linejoin="round"/>
+                <circle cx="32" cy="34" r="10.5" stroke="#F5A623" stroke-width="3.2"/>
+                <circle cx="32" cy="34" r="4" fill="#F5A623"/>
+                <circle cx="46" cy="23" r="2" fill="#F5A623"/>
               </svg>
               <span data-i18n="startCamBtn">تشغيل الكاميرا لبدء الترجمة</span>
             </button>
@@ -492,8 +382,8 @@
         <canvas id="fastOcrCanvas" class="hidden"></canvas>
         <canvas id="motionCheckCanvas" width="40" height="14" class="hidden"></canvas>
 
-        <!-- لوحة عرض الترجمة -->
-        <div id="subtitleCard" class="flex-1 min-h-[175px] clean-surface rounded-3xl p-5 flex flex-col justify-center items-center text-center relative overflow-hidden border border-[var(--border-col)]">
+        <!-- لوحة عرض الترجمة بحدود خلفية متوازنة مع طول وارتفاع النص -->
+        <div id="subtitleCard" class="flex-1 min-h-[200px] clean-surface rounded-3xl p-5 flex flex-col justify-center items-center text-center relative overflow-hidden border border-[var(--border-col)]">
           <div class="absolute top-3 left-3 z-10">
             <button onclick="enterFullLandscape()" class="py-1 px-2 text-xs font-black flex items-center gap-1.5 text-cosmo active:scale-95 transition">
               <i class="fa-solid fa-expand"></i>
@@ -501,76 +391,37 @@
             </button>
           </div>
 
-          <div id="styledSubtitleBox" class="balanced-sub-box" style="position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); max-width: 92%; padding: 10px 15px; background-color: rgba(0, 0, 0, 0.85); border-radius: 0px;">
-            <p id="arabicTextOut" data-i18n="subStopped" class="balanced-sub-text font-extrabold text-[var(--text-main)]" style="font-size: 22px; font-family: 'Tajawal', sans-serif; opacity: 0.25;">الترجمة متوقفة</p>
+          <div id="styledSubtitleBox" class="balanced-sub-box" style="position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); max-width: 85%; padding: 10px 15px; background-color: rgba(0, 0, 0, 0.85); border-radius: 0px;">
+            <p id="arabicTextOut" data-i18n="subStopped" class="balanced-sub-text font-extrabold text-[var(--text-main)]" style="font-size: 24px; font-family: 'Tajawal', sans-serif;">
+              الترجمة متوقفة
+            </p>
           </div>
         </div>
 
         <!-- أزرار التحكم الرئيسية -->
-        <div class="grid grid-cols-2 gap-2.5 shrink-0 pt-0.5">
-          <button id="mainTranslateBtn" onclick="toggleOcrScanning()" class="py-2.5 text-cosmo font-black text-base flex items-center justify-center gap-2 active:scale-95 transition">
+        <div class="grid grid-cols-2 gap-2.5 shrink-0 pt-1">
+          <button id="mainTranslateBtn" onclick="toggleOcrScanning()" class="py-3 text-cosmo font-black text-base flex items-center justify-center gap-2 active:scale-95 transition">
             <i id="translateBtnIcon" class="fa-solid fa-play"></i>
             <span id="translateBtnLabel" data-i18n="translateBtn">ترجمة</span>
           </button>
 
-          <button onclick="expandCameraForEdit()" class="py-2.5 text-cosmo font-black text-base flex items-center justify-center gap-2 active:scale-95 transition">
+          <button onclick="expandCameraForEdit()" class="py-3 text-cosmo font-black text-base flex items-center justify-center gap-2 active:scale-95 transition">
             <i class="fa-solid fa-crop-simple"></i>
             <span data-i18n="editAreaBtn">تعديل المنطقة</span>
           </button>
         </div>
 
         <!-- شريط التحكم بشاشة التلفاز -->
-        <div id="phoneTvControlStrip" class="hidden pt-2 border-t border-[var(--border-col)] flex items-center justify-between gap-3 shrink-0">
-          <button onclick="enterFullLandscape()" class="px-3 py-2 text-cosmo text-xs font-black flex items-center gap-1.5 active:scale-95 transition">
+        <div id="phoneTvControlStrip" class="hidden pt-3 border-t border-[var(--border-col)] flex items-center justify-between gap-3">
+          <button onclick="enterFullLandscape()" class="px-3 py-2.5 text-cosmo text-xs font-black flex items-center gap-1.5 active:scale-95 transition">
             <i class="fa-solid fa-expand"></i>
             <span data-i18n="fitModeBtn">ملائمة</span>
           </button>
-          <button onclick="openView('subAppearanceModal')" class="flex-1 py-2 text-cosmo text-xs font-black flex items-center justify-center gap-2 active:scale-95 transition">
+          <button onclick="openView('subAppearanceModal')" class="flex-1 py-2.5 text-cosmo text-xs font-black flex items-center justify-center gap-2 active:scale-95 transition">
             <i class="fa-solid fa-sliders"></i>
             <span data-i18n="customizeTvBarBtn">تخصيص الترجمة</span>
           </button>
-          <button onclick="unpairTvDevice()" class="px-3 py-2 text-rose-400 text-xs font-black active:scale-95 transition">
-            <span data-i18n="unpairBtn">إلغاء الاقتران</span>
-          </button>
-        </div>
-
-      </div>
-
-      <!-- ================= شاشة 2-ب: وضع الشاشة للتلفاز ================= -->
-      <div id="tvScreenModeWorkspace" class="hidden flex-1 flex flex-col justify-between gap-3">
-
-        <div class="flex-1 clean-surface rounded-3xl p-6 border border-[var(--border-col)] flex flex-col items-center justify-center text-center gap-5">
-          <svg class="w-20 h-20" viewBox="0 0 64 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="5" y="6" width="54" height="36" rx="5.5" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3.2"/>
-            <path d="M21 48 H43" stroke="currentColor" class="text-[var(--text-main)]" stroke-width="3.2" stroke-linecap="round"/>
-            <rect x="12" y="13" width="18" height="4.2" rx="2.1" fill="#F5A623" opacity="0.9"/>
-            <rect x="12" y="20.5" width="13" height="3.8" rx="1.9" fill="#F5A623" opacity="0.65"/>
-            <rect x="17" y="31" width="30" height="4.8" rx="2.4" fill="#F5A623"/>
-          </svg>
-
-          <div class="space-y-1.5">
-            <h4 id="screenModeStatusTitle" data-i18n="screenModeHeadline" class="text-base font-black text-[var(--text-main)]">
-              وضع الشاشة
-            </h4>
-            <p id="screenModeStatusSub" data-i18n="screenFeedWaiting" class="text-xs font-extrabold text-[var(--text-muted)]">
-              اضغط «بدء ترجمة الشاشة» ليقرأ التلفاز الحوارات والقوائم تلقائياً
-            </p>
-          </div>
-        </div>
-
-        <div class="shrink-0 pt-1">
-          <button id="screenModeToggleBtn" onclick="toggleTvFullScreenTranslation()" class="w-full py-3 text-cosmo font-black text-base flex items-center justify-center gap-2 active:scale-95 transition">
-            <i id="screenModeToggleIcon" class="fa-solid fa-play"></i>
-            <span id="screenModeToggleLabel" data-i18n="startScreenTransBtn">بدء ترجمة الشاشة</span>
-          </button>
-        </div>
-
-        <div class="pt-2 border-t border-[var(--border-col)] flex items-center justify-between gap-3 shrink-0">
-          <button onclick="openView('subAppearanceModal')" class="flex-1 py-2 text-cosmo text-xs font-black flex items-center justify-center gap-2 active:scale-95 transition">
-            <i class="fa-solid fa-sliders"></i>
-            <span data-i18n="customizeTvBarBtn">تخصيص الترجمة</span>
-          </button>
-          <button onclick="unpairTvDevice()" class="px-3 py-2 text-rose-400 text-xs font-black active:scale-95 transition">
+          <button onclick="unpairTvDevice()" class="px-3 py-2.5 text-rose-400 text-xs font-black active:scale-95 transition">
             <span data-i18n="unpairBtn">إلغاء الاقتران</span>
           </button>
         </div>
@@ -582,7 +433,7 @@
   </div>
 
   <!-- ========================================================================================= -->
-  <!-- ================= 3. شاشة الملائمة الكاملة (حجم الكاميرا ثابت لا يصغر عند بدء الترجمة) ================= -->
+  <!-- ================= 3. شاشة الملائمة الكاملة ================= -->
   <!-- ========================================================================================= -->
   <div id="landscapeFullOverlay" class="hidden fixed inset-0 z-[90] bg-[#09090D] text-white flex flex-col justify-between p-3 sm:p-5">
 
@@ -610,11 +461,6 @@
           <span id="landScanBtnLabel" data-i18n="translateBtn">ترجمة</span>
         </button>
 
-        <button onclick="expandCameraForEdit()" class="py-1 px-2.5 text-cosmo text-xs font-black flex items-center gap-1.5">
-          <i class="fa-solid fa-crop-simple"></i>
-          <span data-i18n="editAreaBtn">تعديل المنطقة</span>
-        </button>
-
         <button onclick="exitFullLandscape()" class="py-1 px-2 text-rose-400 text-xs font-black flex items-center gap-1.5">
           <i class="fa-solid fa-compress"></i>
           <span data-i18n="exitBtn">خروج</span>
@@ -633,8 +479,10 @@
       </div>
 
       <div id="landSubtitleCard" class="flex-1 bg-[#0C0C10] border border-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
-        <div id="landSubBox" class="balanced-sub-box" style="position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); max-width: 92%; padding: 10px 15px; background-color: rgba(0, 0, 0, 0.85); border-radius: 0px;">
-          <p id="landArabicOut" data-i18n="fitReadyMsg" class="balanced-sub-text text-2xl sm:text-3xl font-black text-white" style="font-family: 'Tajawal', sans-serif; direction: rtl; opacity: 0.25;">في انتظار الترجمة</p>
+        <div id="landSubBox" class="balanced-sub-box" style="position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); max-width: 85%; padding: 10px 15px; background-color: rgba(0, 0, 0, 0.85); border-radius: 0px;">
+          <p id="landArabicOut" data-i18n="fitReadyMsg" class="balanced-sub-text text-2xl sm:text-4xl font-black text-white" style="font-family: 'Tajawal', sans-serif; direction: rtl;">
+            في انتظار الترجمات
+          </p>
         </div>
       </div>
     </div>
@@ -643,46 +491,42 @@
   <!-- ========================================================================================= -->
   <!-- ================= 4. كاميرا مسح رمز الاستجابة السريعة من الجوال ================= -->
   <!-- ========================================================================================= -->
-  <div id="qrScannerModal" class="sheet-modal-backdrop fixed inset-0 z-50 bg-black/95 text-white flex flex-col justify-between p-5 max-w-md mx-auto">
-    <div class="sheet-modal-panel flex-1 flex flex-col justify-between">
-      <div class="flex items-center justify-between pb-3">
-        <h3 data-i18n="scanQrModalTitle" class="text-sm font-black">مسح الرمز من التلفاز</h3>
-        <button onclick="stopQrScannerModal()" class="py-1 px-2 text-cosmo font-black text-base">✕</button>
-      </div>
-
-      <div class="my-auto space-y-7 text-center">
-        <div class="relative w-64 h-64 mx-auto rounded-3xl overflow-hidden border-2 border-[#F5A623] bg-slate-900">
-          <video id="qrVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
-          <canvas id="qrCanvas" class="hidden"></canvas>
-          <div class="absolute inset-6 border-2 border-dashed border-white/60 rounded-2xl pointer-events-none"></div>
-        </div>
-
-        <div class="pt-5 border-t border-slate-800 space-y-3.5">
-          <label data-i18n="manualCodeLabel" class="text-xs font-extrabold text-slate-300 block">أو أدخل رقم الرمز الظاهر تحت المربع:</label>
-          <div class="flex gap-3 items-center">
-            <input id="manualTvCodeInput" type="tel" maxlength="8" placeholder="12345678" class="flex-1 py-3 px-3 rounded-xl bg-slate-900 border border-slate-700 text-center font-mono text-sm font-black text-white outline-none focus:border-[#F5A623]" />
-            <button onclick="verifyManualTvPairCode()" class="px-5 py-3 text-cosmo text-sm font-black">
-              <span data-i18n="pairNowBtn">اقتران</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <button onclick="stopQrScannerModal()" class="w-full py-2.5 text-cosmo text-sm font-black">
-        <span data-i18n="cancelBtn">إلغاء</span>
-      </button>
+  <div id="qrScannerModal" class="hidden fixed inset-0 z-50 bg-black/95 text-white flex flex-col justify-between p-5 max-w-md mx-auto">
+    <div class="flex items-center justify-between pb-3">
+      <h3 data-i18n="scanQrModalTitle" class="text-sm font-black">مسح الرمز من التلفاز</h3>
+      <button onclick="stopQrScannerModal()" class="py-1 px-2 text-cosmo font-black text-base">✕</button>
     </div>
+
+    <div class="my-auto space-y-7 text-center">
+      <div class="relative w-64 h-64 mx-auto rounded-3xl overflow-hidden border-2 border-[#F5A623] bg-slate-900">
+        <video id="qrVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <canvas id="qrCanvas" class="hidden"></canvas>
+        <div class="absolute inset-6 border-2 border-dashed border-white/60 rounded-2xl pointer-events-none"></div>
+      </div>
+
+      <div class="pt-5 border-t border-slate-800 space-y-3.5">
+        <label data-i18n="manualCodeLabel" class="text-[11px] text-slate-400 block">أو أدخل رقم الرمز الظاهر تحت المربع:</label>
+        <div class="flex gap-3 items-center">
+          <input id="manualTvCodeInput" type="tel" maxlength="8" placeholder="12345678" class="flex-1 py-3 px-3 rounded-xl bg-slate-900 border border-slate-700 text-center font-mono text-sm text-white outline-none focus:border-[#F5A623]" />
+          <button onclick="verifyManualTvPairCode()" class="px-5 py-3 text-cosmo text-sm font-black">
+            <span data-i18n="pairNowBtn">اقتران</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="stopQrScannerModal()" class="w-full py-2.5 text-cosmo text-sm font-black">
+      <span data-i18n="cancelBtn">إلغاء</span>
+    </button>
   </div>
 
   <!-- ========================================================================================= -->
-  <!-- ================= 5. القائمة الرئيسية للإعدادات (تنزلق من الأسفل بحركة ناعمة وسلسة) ================= -->
+  <!-- ================= 5. القائمة الرئيسية للإعدادات ================= -->
   <!-- ========================================================================================= -->
-  <div id="settingsMainModal" onclick="if(event.target===this) closeView('settingsMainModal')" class="sheet-modal-backdrop fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center">
-    <div class="sheet-modal-panel bg-[var(--bg-page)] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 border-t border-[var(--border-col)] max-h-[88vh] overflow-y-auto no-scrollbar">
+  <div id="settingsMainModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center">
+    <div class="bg-[var(--bg-page)] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 border-t border-[var(--border-col)] max-h-[88vh] overflow-y-auto no-scrollbar">
 
-      <div class="w-10 h-1 bg-[var(--border-col)] rounded-full mx-auto mb-1"></div>
-
-      <div class="flex items-center justify-between pb-1">
+      <div class="flex items-center justify-between pb-2">
         <h3 data-i18n="settingsTitle" class="text-base font-black">الإعدادات</h3>
         <button onclick="closeView('settingsMainModal')" class="py-1 px-2 text-cosmo font-black text-base">✕</button>
       </div>
@@ -693,10 +537,8 @@
             <i class="fa-solid fa-earth-americas text-base text-cosmo"></i>
             <span data-i18n="appLangLabel" class="text-xs font-extrabold">لغة التطبيق</span>
           </div>
-          <button onclick="toggleAppLanguage()" id="langSwitchBtn" class="py-1 px-2 text-cosmo text-xs font-black inline-flex items-center gap-1.5 leading-none" dir="ltr">
-            <span class="inline-block -translate-y-[2px] text-[13px] font-black leading-none">ع</span>
-            <span class="inline-block opacity-60 leading-none">/</span>
-            <span class="inline-block text-[12px] font-black leading-none">EN</span>
+          <button onclick="toggleAppLanguage()" id="langSwitchBtn" class="py-1 px-2 text-cosmo text-xs font-black tracking-wide" dir="ltr">
+            ع / EN
           </button>
         </div>
 
@@ -706,7 +548,7 @@
             <span data-i18n="themeLabel" class="text-xs font-extrabold">المظهر</span>
           </div>
           <button onclick="toggleThemeMode()" id="themeSwitchBtn" data-i18n="darkModeBtnLabel" class="py-1 px-2 text-cosmo text-xs font-black">
-            داكن
+            الوضع الداكن
           </button>
         </div>
 
@@ -750,264 +592,231 @@
   </div>
 
   <!-- ========================================================================================= -->
-  <!-- ================= 6. نافذة تغيير القارئ ومحرك الترجمة (بدون حزمة اللغة + اتصال حقيقي بسيرفرات المحركات) ================= -->
+  <!-- ================= 6. نافذة تغيير القارئ ومحرك الترجمة بأيقونات هوية التطبيق ================= -->
   <!-- ========================================================================================= -->
-  <div id="engineSettingsModal" onclick="if(event.target===this) closeView('engineSettingsModal')" class="sheet-modal-backdrop fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center">
-    <div class="sheet-modal-panel bg-[var(--bg-page)] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-3.5 text-right border-t sm:border border-[var(--border-col)] max-h-[90vh] overflow-y-auto no-scrollbar">
-      <div class="flex items-center justify-between border-b border-[var(--border-col)] pb-2.5">
+  <div id="engineSettingsModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[var(--bg-page)] w-full max-w-md rounded-3xl p-5 space-y-4 text-right border border-[var(--border-col)] max-h-[88vh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between border-b border-[var(--border-col)] pb-3">
         <h3 data-i18n="engineModalTitle" class="text-sm font-black">تغيير القارئ ومحرك الترجمة</h3>
         <button onclick="closeView('engineSettingsModal')" class="py-1 px-2 text-cosmo font-black text-base">✕</button>
       </div>
 
-      <!-- 1. القارئ الضوئي -->
-      <div class="space-y-1.5">
+      <div class="space-y-2">
         <label data-i18n="ocrModeLabel" class="text-xs font-extrabold block text-cosmo">1. القارئ الضوئي:</label>
-        <select id="ocrReaderModeSelect" class="w-full py-2.5 px-3 rounded-2xl clean-surface text-xs font-extrabold outline-none border border-[var(--border-col)]">
+        <select id="ocrReaderModeSelect" class="w-full py-3 px-3 rounded-2xl clean-surface text-xs font-bold outline-none border border-[var(--border-col)]">
           <option value="smart_subtitle" data-i18n="ocrSmartOpt" selected>قارئ الحوارات الذكي</option>
           <option value="fast_standard" data-i18n="ocrStandardOpt">القارئ القياسي</option>
         </select>
       </div>
 
-      <!-- 2. قائمة محركات الترجمة الحقيقية مع أزرار التبديل الواضحة في الوضع الفاتح والداكن -->
-      <div class="space-y-1.5">
+      <div class="space-y-2">
         <label data-i18n="transEngineLabel" class="text-xs font-extrabold block text-cosmo">2. محرك الترجمة:</label>
         <input type="hidden" id="translatorEngineSelect" value="google_gtx" />
 
         <div class="rounded-2xl clean-surface border border-[var(--border-col)] divide-y divide-[var(--border-col)] overflow-hidden">
-          <!-- المحركات المجانية -->
-          <div onclick="selectCustomTranslatorEngine('google_gtx')" data-eng="google_gtx" class="engine-choice-row w-full py-2.5 px-3.5 flex items-center justify-between text-xs font-extrabold cursor-pointer transition">
-            <span>Google Translate</span>
-            <button type="button" class="ios-switch eng-switch active" role="switch" aria-checked="true">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
+          <!-- محركات مجانية -->
+          <button type="button" onclick="selectCustomTranslatorEngine('google_gtx')" data-eng="google_gtx" class="engine-choice-row w-full py-3 px-3.5 flex items-center justify-between text-xs font-extrabold transition">
+            <span data-i18n="engGoogleOpt">Google Translate (مجاني)</span>
+            <i class="eng-status-icon fa-solid fa-circle-check text-cosmo text-sm"></i>
+          </button>
 
-          <div onclick="selectCustomTranslatorEngine('microsoft_edge')" data-eng="microsoft_edge" class="engine-choice-row w-full py-2.5 px-3.5 flex items-center justify-between text-xs font-extrabold cursor-pointer transition">
-            <span>Microsoft Translator</span>
-            <button type="button" class="ios-switch eng-switch" role="switch" aria-checked="false">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
+          <button type="button" onclick="selectCustomTranslatorEngine('microsoft_edge')" data-eng="microsoft_edge" class="engine-choice-row w-full py-3 px-3.5 flex items-center justify-between text-xs font-extrabold transition">
+            <span data-i18n="engMicrosoftOpt">Microsoft Translator (مجاني)</span>
+            <i class="eng-status-icon fa-regular fa-circle text-[var(--text-muted)] text-sm"></i>
+          </button>
 
-          <!-- محرك DeepL الرسمي (يتصل بسيرفر api-free.deepl.com / api.deepl.com عبر مفتاح API الرسمي) -->
-          <div onclick="selectCustomTranslatorEngine('deepl_api')" data-eng="deepl_api" class="engine-choice-row w-full py-2.5 px-3.5 flex items-center justify-between text-xs font-extrabold cursor-pointer transition">
-            <span class="flex items-center gap-2">
-              <span>DeepL Translator</span>
-              <span class="text-[10px] font-black text-cosmo">API</span>
-            </span>
-            <button type="button" class="ios-switch eng-switch" role="switch" aria-checked="false">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
-
-          <!-- المحركات المدفوعه (تطلب اشتراكاً وتتصل مباشرة بسيرفراتها الرسمية) -->
-          <div onclick="selectCustomTranslatorEngine('pro_gemini_2_5_flash')" data-eng="pro_gemini_2_5_flash" class="engine-choice-row w-full py-2.5 px-3.5 flex items-center justify-between text-xs font-extrabold cursor-pointer transition">
+          <!-- محركات الذكاء الاصطناعي PRO بأيقونات هوية SIYAQ البرتقالية الذهبية -->
+          <button type="button" onclick="selectCustomTranslatorEngine('pro_gemini_2_5_flash')" data-eng="pro_gemini_2_5_flash" class="engine-choice-row w-full py-3 px-3.5 flex items-center justify-between text-xs font-extrabold transition">
             <span class="flex items-center gap-2">
               <span>Gemini 2.5 Flash</span>
               <span class="text-[10px] font-black text-cosmo">PRO</span>
             </span>
-            <button type="button" class="ios-switch eng-switch" role="switch" aria-checked="false">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
+            <i class="eng-pro-badge-icon fa-solid fa-crown text-cosmo text-xs"></i>
+          </button>
 
-          <div onclick="selectCustomTranslatorEngine('pro_gpt_4o_mini')" data-eng="pro_gpt_4o_mini" class="engine-choice-row w-full py-2.5 px-3.5 flex items-center justify-between text-xs font-extrabold cursor-pointer transition">
+          <button type="button" onclick="selectCustomTranslatorEngine('pro_gpt_4o_mini')" data-eng="pro_gpt_4o_mini" class="engine-choice-row w-full py-3 px-3.5 flex items-center justify-between text-xs font-extrabold transition">
             <span class="flex items-center gap-2">
               <span>GPT-4o mini</span>
               <span class="text-[10px] font-black text-cosmo">PRO</span>
             </span>
-            <button type="button" class="ios-switch eng-switch" role="switch" aria-checked="false">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
+            <i class="eng-pro-badge-icon fa-solid fa-crown text-cosmo text-xs"></i>
+          </button>
 
-          <div onclick="selectCustomTranslatorEngine('pro_claude_3_5_haiku')" data-eng="pro_claude_3_5_haiku" class="engine-choice-row w-full py-2.5 px-3.5 flex items-center justify-between text-xs font-extrabold cursor-pointer transition">
+          <button type="button" onclick="selectCustomTranslatorEngine('pro_claude_3_5_haiku')" data-eng="pro_claude_3_5_haiku" class="engine-choice-row w-full py-3 px-3.5 flex items-center justify-between text-xs font-extrabold transition">
             <span class="flex items-center gap-2">
               <span>Claude 3.5 Haiku</span>
               <span class="text-[10px] font-black text-cosmo">PRO</span>
             </span>
-            <button type="button" class="ios-switch eng-switch" role="switch" aria-checked="false">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
+            <i class="eng-pro-badge-icon fa-solid fa-crown text-cosmo text-xs"></i>
+          </button>
 
-          <div onclick="selectCustomTranslatorEngine('pro_deepseek_v3')" data-eng="pro_deepseek_v3" class="engine-choice-row w-full py-2.5 px-3.5 flex items-center justify-between text-xs font-extrabold cursor-pointer transition">
+          <button type="button" onclick="selectCustomTranslatorEngine('pro_deepseek_v3')" data-eng="pro_deepseek_v3" class="engine-choice-row w-full py-3 px-3.5 flex items-center justify-between text-xs font-extrabold transition">
             <span class="flex items-center gap-2">
               <span>DeepSeek V3</span>
               <span class="text-[10px] font-black text-cosmo">PRO</span>
             </span>
-            <button type="button" class="ios-switch eng-switch" role="switch" aria-checked="false">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- حقل إدخال وفحص مفتاح API الرسمي للمحركات التي تتطلب اتصالاً بسيرفراتها الخاصة -->
-      <div id="apiKeyInputContainer" class="hidden p-3.5 rounded-2xl clean-surface border border-[#F5A623]/40 space-y-2.5">
-        <div class="flex items-center justify-between">
-          <span id="apiKeyEngineTitle" class="text-xs font-black text-cosmo">مفتاح API الرسمي:</span>
-          <button type="button" onclick="testUserEngineApiKey()" id="testApiKeyBtn" class="ui-pill-btn py-1 px-2.5 rounded-lg text-[10px] font-black" style="background-color: rgba(245, 166, 35, 0.14); color: #F5A623; border: 1px solid rgba(245, 166, 35, 0.35);">
-            فحص الاتصال بالسيرفر
+            <i class="eng-pro-badge-icon fa-solid fa-crown text-cosmo text-xs"></i>
           </button>
         </div>
-        <input id="userCustomApiKeyInput" type="password" dir="ltr" placeholder="أدخل مفتاح API الرسمي هنا..." class="w-full py-2.5 px-3 rounded-xl bg-[var(--bg-page)] border border-[var(--border-col)] text-xs font-mono font-bold text-[var(--text-main)] outline-none focus:border-[#F5A623]" />
-        <p id="apiKeyHelperHint" class="text-xs font-bold text-[var(--text-muted)] leading-relaxed">
-          يتصل هذا المحرك مباشرة بسيرفر الشركة الرسمي باستخدام مفتاحك دون أي تحويل إلى Google.
-        </p>
       </div>
 
-      <button onclick="applyEngineChanges()" class="w-full py-2.5 text-cosmo text-sm font-black">
+      <button onclick="applyEngineChanges()" class="w-full py-3 text-cosmo text-sm font-black">
         <span data-i18n="applyAndSaveBtn">تطبيق وحفظ</span>
       </button>
     </div>
   </div>
 
   <!-- ========================================================================================= -->
-  <!-- ================= 7. نافذة تعديل مظهر الترجمة (التمويه الذكي مطفأ افتراضياً ولا يشتغل إلا باختيارك) ================= -->
+  <!-- ================= 7. نافذة تعديل مظهر الترجمة ================= -->
   <!-- ========================================================================================= -->
-  <div id="subAppearanceModal" class="sheet-modal-backdrop fixed inset-0 z-50 bg-[#050507] text-white flex flex-col justify-between max-w-md mx-auto overflow-y-auto p-4 no-scrollbar">
-    <div class="sheet-modal-panel flex-1 flex flex-col justify-between">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
-        <button onclick="saveAndConfirmSettings('subAppearanceModal')" class="py-1 px-2 text-cosmo text-xs font-black">
+  <div id="subAppearanceModal" class="hidden fixed inset-0 z-50 bg-[#050507] text-white flex flex-col justify-between max-w-md mx-auto overflow-y-auto p-4 no-scrollbar">
+
+    <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+      <button onclick="saveAndConfirmSettings('subAppearanceModal')" class="py-1 px-2 text-cosmo text-xs font-black">
+        <span data-i18n="applyAndSaveBtn">تطبيق وحفظ</span>
+      </button>
+      <h3 data-i18n="subAppearanceTitle" class="text-sm font-black">تخصيص مظهر الترجمة</h3>
+      <button onclick="closeView('subAppearanceModal')" class="py-1 px-2 text-cosmo flex items-center justify-center">
+        <i class="fa-solid fa-chevron-left text-sm"></i>
+      </button>
+    </div>
+
+    <div class="space-y-4 my-3 text-right">
+
+      <div class="bg-[#0C0C10] rounded-3xl p-4 space-y-3 border border-slate-800">
+        <div id="previewStageContainer" class="h-36 bg-black rounded-2xl relative overflow-hidden border border-slate-800">
+          <div id="previewMockSubBox" class="balanced-sub-box" style="position: absolute; left: 50%; top: 82%; transform: translate(-50%, -50%); max-width: 85%; background-color: rgba(0,0,0,0.85); padding: 10px 15px; border-radius: 0px;">
+            <span id="previewMockSubText" data-i18n="livePreviewSample" class="balanced-sub-text" style="font-size: 20px; color: #FFFFFF; font-weight: 800; font-family: 'Tajawal', sans-serif;">
+              معاينة حية للترجمة
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 text-center text-xs font-bold border-b border-slate-800 pb-2.5">
+          <button onclick="setQuickAlign('top')" id="alignBtnTop" data-i18n="alignTop" class="py-1 text-slate-400">الأعلى</button>
+          <button onclick="setQuickAlign('center')" id="alignBtnCenter" data-i18n="alignCenter" class="py-1 text-slate-400">المنتصف</button>
+          <button onclick="setQuickAlign('bottom')" id="alignBtnBottom" data-i18n="alignBottom" class="py-1 text-cosmo font-black">الأسفل</button>
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <input type="checkbox" id="largeClearToggle" onchange="toggleLargeClearSub(this.checked)" class="w-5 h-5 accent-[#F5A623] rounded cursor-pointer" />
+          <span data-i18n="largeTextToggle" class="text-xs font-bold">نص كبير وواضح</span>
+        </div>
+      </div>
+
+      <div data-i18n="textSectionTitle" class="text-xs font-bold text-slate-400 px-1">النص</div>
+      <div class="bg-[#0C0C10] rounded-3xl p-4 space-y-4 border border-slate-800">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <select id="subFontFamily" onchange="applySubtitleStyles()" class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-xl text-cosmo text-xs font-black outline-none">
+            <option value="'Tajawal', sans-serif">Tajawal</option>
+            <option value="'Cairo', sans-serif">Cairo</option>
+            <option value="'Changa', sans-serif">Changa</option>
+            <option value="'Almarai', sans-serif">Almarai</option>
+          </select>
+          <span data-i18n="fontLabel" class="text-xs font-bold">الخط</span>
+        </div>
+
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <input type="checkbox" id="subBoldCheck" checked onchange="applySubtitleStyles()" class="w-5 h-5 accent-[#F5A623] rounded cursor-pointer" />
+          <span data-i18n="boldLabel" class="text-xs font-bold">عريض وواضح</span>
+        </div>
+
+        <div class="space-y-2 border-b border-slate-800 pb-3">
+          <div class="flex justify-between text-xs font-bold">
+            <span id="lblFontSize">24px</span>
+            <span data-i18n="sizeLabel">الحجم</span>
+          </div>
+          <input type="range" id="rngFontSize" min="10" max="42" value="24" oninput="applySubtitleStyles()" class="w-full" />
+        </div>
+
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <button onclick="openColorSpectrumPicker('text')" class="flex items-center gap-2 px-2 py-1 text-cosmo">
+            <i class="fa-solid fa-eye-dropper text-xs"></i>
+            <span id="textColorPreviewCircle" class="w-5 h-5 rounded-md border border-white/40" style="background-color: #FFFFFF;"></span>
+          </button>
+          <span data-i18n="textColorLabel" class="text-xs font-bold">لون النص</span>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs font-bold">
+            <span id="lblTextOpacity">100%</span>
+            <span data-i18n="textOpacityLabel">شفافية النص</span>
+          </div>
+          <input type="range" id="rngTextOpacity" min="20" max="100" value="100" oninput="applySubtitleStyles()" class="w-full" />
+        </div>
+      </div>
+
+      <div data-i18n="bgSectionTitle" class="text-xs font-bold text-slate-400 px-1">خلفية الشريط</div>
+      <div class="bg-[#0C0C10] rounded-3xl p-4 space-y-4 border border-slate-800">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <button onclick="openColorSpectrumPicker('bg')" class="flex items-center gap-2 px-2 py-1 text-cosmo">
+            <i class="fa-solid fa-eye-dropper text-xs"></i>
+            <span id="bgColorPreviewCircle" class="w-5 h-5 rounded-md border border-white/40" style="background-color: #000000;"></span>
+          </button>
+          <span data-i18n="bgColorLabel" class="text-xs font-bold">لون الخلفية</span>
+        </div>
+
+        <div class="space-y-2 border-b border-slate-800 pb-3">
+          <div class="flex justify-between text-xs font-bold">
+            <span id="lblBgOpacity">85%</span>
+            <span data-i18n="bgOpacityLabel">درجة التعتيم</span>
+          </div>
+          <input type="range" id="rngBgOpacity" min="0" max="100" value="85" oninput="applySubtitleStyles()" class="w-full" />
+        </div>
+
+        <div class="space-y-2 border-b border-slate-800 pb-3">
+          <div class="flex justify-between text-xs font-bold">
+            <span id="lblBgWidth">85%</span>
+            <span data-i18n="bgWidthLabel">أقصى عرض للشريط</span>
+          </div>
+          <input type="range" id="rngBgWidth" min="25" max="100" value="85" oninput="applySubtitleStyles()" class="w-full" />
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs font-bold">
+            <span id="lblBgHeight">10px</span>
+            <span data-i18n="bgHeightLabel">حواف الخلفية</span>
+          </div>
+          <input type="range" id="rngBgHeight" min="2" max="32" value="10" oninput="applySubtitleStyles()" class="w-full" />
+        </div>
+      </div>
+
+      <div data-i18n="tvPosSectionTitle" class="text-xs font-bold text-slate-400 px-1">موقع الترجمة على الشاشة</div>
+      <div class="bg-[#0C0C10] rounded-3xl p-4 space-y-4 border border-slate-800">
+        <div class="space-y-2 border-b border-slate-800 pb-3">
+          <div class="flex justify-between text-xs font-bold">
+            <span id="lblPosX">50%</span>
+            <span data-i18n="posXLabel">الموقع الأفقي</span>
+          </div>
+          <input type="range" id="rngPosX" min="15" max="85" value="50" oninput="applySubtitleStyles()" class="w-full" />
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs font-bold">
+            <span id="lblPosY">82%</span>
+            <span data-i18n="posYLabel">الموقع العمودي</span>
+          </div>
+          <input type="range" id="rngPosY" min="15" max="90" value="82" oninput="applySubtitleStyles()" class="w-full" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button onclick="saveAndConfirmSettings('subAppearanceModal')" class="py-3 text-cosmo font-black text-sm">
           <span data-i18n="applyAndSaveBtn">تطبيق وحفظ</span>
         </button>
-        <h3 data-i18n="subAppearanceTitle" class="text-sm font-black">تخصيص مظهر الترجمة</h3>
-        <button onclick="closeView('subAppearanceModal')" class="py-1 px-2 text-cosmo flex items-center justify-center">
-          <i class="fa-solid fa-chevron-left text-sm"></i>
+        <button onclick="resetSubtitleStyleDefaults()" class="py-3 text-slate-400 font-bold text-xs">
+          <span data-i18n="resetDefaultsBtn">استعادة الافتراضي</span>
         </button>
       </div>
 
-      <div class="space-y-4 my-3 text-right">
-
-        <div class="bg-[#0C0C10] rounded-3xl p-4 space-y-3.5 border border-slate-800">
-          <div id="previewStageContainer" class="h-36 bg-black rounded-2xl relative overflow-hidden border border-slate-800">
-            <div id="previewMockSubBox" class="balanced-sub-box" style="position: absolute; left: 50%; top: 82%; transform: translate(-50%, -50%); max-width: 92%; background-color: rgba(0,0,0,0.85); padding: 10px 15px; border-radius: 0px;">
-              <span id="previewMockSubText" data-i18n="livePreviewSample" class="balanced-sub-text" style="font-size: 20px; color: #FFFFFF; font-weight: 800; font-family: 'Tajawal', sans-serif;">معاينة حية للترجمة</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 text-center text-xs font-extrabold border-b border-slate-800 pb-2.5">
-            <button onclick="setQuickAlign('top')" id="alignBtnTop" data-i18n="alignTop" class="py-1 text-slate-400">الأعلى</button>
-            <button onclick="setQuickAlign('center')" id="alignBtnCenter" data-i18n="alignCenter" class="py-1 text-slate-400">المنتصف</button>
-            <button onclick="setQuickAlign('bottom')" id="alignBtnBottom" data-i18n="alignBottom" class="py-1 text-cosmo font-black">الأسفل</button>
-          </div>
-
-          <!-- نص كبير وواضح -->
-          <div class="flex items-center justify-between pt-0.5 border-b border-slate-800 pb-3">
-            <span data-i18n="largeTextToggle" class="text-xs font-extrabold">نص كبير وواضح</span>
-            <button type="button" id="largeClearSwitch" onclick="toggleIosSwitch('largeClearSwitch'); toggleLargeClearSub();" class="ios-switch" role="switch" aria-checked="false">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
-
-          <!-- التمويه الذكي (مطفأ افتراضياً ولا يشتغل إلا عند تفعيله) -->
-          <div class="flex items-center justify-between pt-0.5">
-            <span data-i18n="smartCamouflageLabel" class="text-xs font-extrabold text-cosmo">التمويه الذكي</span>
-            <button type="button" id="smartCamouflageSwitch" onclick="toggleIosSwitch('smartCamouflageSwitch'); applySubtitleStyles();" class="ios-switch" role="switch" aria-checked="false">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
-        </div>
-
-        <div data-i18n="textSectionTitle" class="text-xs font-extrabold text-slate-300 px-1">النص والخطوط وحدود الحروف</div>
-        <div class="bg-[#0C0C10] rounded-3xl p-4 space-y-4 border border-slate-800">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <select id="subFontFamily" onchange="applySubtitleStyles()" class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-xl text-cosmo text-xs font-black outline-none">
-              <option value="'Tajawal', sans-serif">Tajawal</option>
-              <option value="'Cairo', sans-serif">Cairo</option>
-              <option value="'Changa', sans-serif">Changa</option>
-              <option value="'Almarai', sans-serif">Almarai</option>
-            </select>
-            <span data-i18n="fontLabel" class="text-xs font-extrabold">الخط</span>
-          </div>
-
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <span data-i18n="boldLabel" class="text-xs font-extrabold">عريض وواضح</span>
-            <button type="button" id="subBoldSwitch" onclick="toggleIosSwitch('subBoldSwitch'); applySubtitleStyles();" class="ios-switch active" role="switch" aria-checked="true">
-              <span class="ios-switch-knob"></span>
-            </button>
-          </div>
-
-          <div class="space-y-2 border-b border-slate-800 pb-3">
-            <div class="flex justify-between text-xs font-extrabold">
-              <span id="lblFontSize">22px</span>
-              <span data-i18n="sizeLabel">الحجم</span>
-            </div>
-            <input type="range" id="rngFontSize" min="12" max="42" value="22" oninput="applySubtitleStyles()" class="w-full" />
-          </div>
-
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <button onclick="openColorSpectrumPicker('text')" class="flex items-center gap-2 px-2 py-1 text-cosmo">
-              <i class="fa-solid fa-eye-dropper text-xs"></i>
-              <span id="textColorPreviewCircle" class="w-5 h-5 rounded-md border border-white/40" style="background-color: #FFFFFF;"></span>
-            </button>
-            <span data-i18n="textColorLabel" class="text-xs font-extrabold">لون النص</span>
-          </div>
-
-          <!-- سُمك ولون حدود الخط -->
-          <div class="space-y-2 border-b border-slate-800 pb-3">
-            <div class="flex justify-between text-xs font-extrabold">
-              <span id="lblStrokeWidth">0px</span>
-              <span data-i18n="strokeWidthLabel">سُمك حدود الخط</span>
-            </div>
-            <input type="range" id="rngStrokeWidth" min="0" max="8" step="0.5" value="0" oninput="applySubtitleStyles()" class="w-full" />
-          </div>
-
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <button onclick="openColorSpectrumPicker('stroke')" class="flex items-center gap-2 px-2 py-1 text-cosmo">
-              <i class="fa-solid fa-eye-dropper text-xs"></i>
-              <span id="strokeColorPreviewCircle" class="w-5 h-5 rounded-md border border-white/40" style="background-color: #050507;"></span>
-            </button>
-            <span data-i18n="strokeColorLabel" class="text-xs font-extrabold">لون حدود الخط</span>
-          </div>
-
-          <div class="space-y-2">
-            <div class="flex justify-between text-xs font-extrabold">
-              <span id="lblTextOpacity">100%</span>
-              <span data-i18n="textOpacityLabel">شفافية النص</span>
-            </div>
-            <input type="range" id="rngTextOpacity" min="20" max="100" value="100" oninput="applySubtitleStyles()" class="w-full" />
-          </div>
-        </div>
-
-        <div data-i18n="tvPosSectionTitle" class="text-xs font-extrabold text-slate-300 px-1">موقع الترجمة على الشاشة</div>
-        <div class="bg-[#0C0C10] rounded-3xl p-4 space-y-4 border border-slate-800">
-          <div class="space-y-2 border-b border-slate-800 pb-3">
-            <div class="flex justify-between text-xs font-extrabold">
-              <span id="lblPosX">50%</span>
-              <span data-i18n="posXLabel">الموقع الأفقي</span>
-            </div>
-            <input type="range" id="rngPosX" min="15" max="85" value="50" oninput="applySubtitleStyles()" class="w-full" />
-          </div>
-
-          <div class="space-y-2">
-            <div class="flex justify-between text-xs font-extrabold">
-              <span id="lblPosY">82%</span>
-              <span data-i18n="posYLabel">الموقع العمودي</span>
-            </div>
-            <input type="range" id="rngPosY" min="15" max="90" value="82" oninput="applySubtitleStyles()" class="w-full" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2.5 pt-1">
-          <button onclick="saveAndConfirmSettings('subAppearanceModal')" class="py-3 text-cosmo font-black text-sm">
-            <span data-i18n="applyAndSaveBtn">تطبيق وحفظ</span>
-          </button>
-          <button onclick="resetSubtitleStyleDefaults()" class="py-3 text-slate-300 font-extrabold text-xs">
-            <span data-i18n="resetDefaultsBtn">استعادة الافتراضي</span>
-          </button>
-        </div>
-
-      </div>
     </div>
   </div>
 
   <!-- ========================================================================================= -->
   <!-- ================= 8. نافذة القطارة وطيف الألوان ================= -->
   <!-- ========================================================================================= -->
-  <div id="colorPickerModal" onclick="if(event.target===this) closeView('colorPickerModal')" class="sheet-modal-backdrop fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-end justify-center">
-    <div class="sheet-modal-panel bg-[#181A20] text-white w-full max-w-md rounded-t-3xl p-5 space-y-4 border-t border-slate-700">
+  <div id="colorPickerModal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-end justify-center">
+    <div class="bg-[#181A20] text-white w-full max-w-md rounded-t-3xl p-5 space-y-4 border-t border-slate-700">
       <div class="flex items-center justify-between">
         <button onclick="closeView('colorPickerModal')" class="py-1 px-2 text-cosmo font-black text-base">✕</button>
         <span id="colorModalTitle" class="text-sm font-black">الألوان</span>
@@ -1016,10 +825,10 @@
         </button>
       </div>
 
-      <div class="grid grid-cols-3 text-center text-xs font-extrabold border-b border-slate-700 pb-2">
+      <div class="grid grid-cols-3 text-center text-xs font-bold border-b border-slate-700 pb-2">
         <button onclick="switchColorTab('spectrum')" id="tabSpec" data-i18n="colorTabSpectrum" class="py-1 text-cosmo font-black">الطيف</button>
-        <button onclick="switchColorTab('grid')" id="tabGrid" data-i18n="colorTabGrid" class="py-1 text-slate-300">الشبكة</button>
-        <button onclick="switchColorTab('sliders')" id="tabSliders" data-i18n="colorTabSliders" class="py-1 text-slate-300">مخصص</button>
+        <button onclick="switchColorTab('grid')" id="tabGrid" data-i18n="colorTabGrid" class="py-1 text-slate-400">الشبكة</button>
+        <button onclick="switchColorTab('sliders')" id="tabSliders" data-i18n="colorTabSliders" class="py-1 text-slate-400">مخصص</button>
       </div>
 
       <div id="spectrumPanel" class="relative flex justify-center">
@@ -1029,7 +838,7 @@
 
       <div id="gridPanel" class="hidden grid grid-cols-6 gap-2 pt-1"></div>
 
-      <div id="slidersPanel" class="hidden space-y-3 pt-1 text-xs font-extrabold">
+      <div id="slidersPanel" class="hidden space-y-3 pt-1 text-xs">
         <div>
           <div class="flex justify-between mb-1"><span>R</span><span id="valR">255</span></div>
           <input type="range" id="rgbR" min="0" max="255" value="255" oninput="updateFromRgbSliders()" class="w-full" />
@@ -1056,48 +865,46 @@
   <!-- ========================================================================================= -->
   <!-- ================= 9. شرح طريقة الاقتران وتحميل تطبيق سياق للتلفزيون ================= -->
   <!-- ========================================================================================= -->
-  <div id="tvGuideModal" class="sheet-modal-backdrop fixed inset-0 z-50 bg-[#050507] text-white flex flex-col justify-between p-5 max-w-md mx-auto overflow-y-auto no-scrollbar">
-    <div class="sheet-modal-panel flex-1 flex flex-col justify-between">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
-        <button onclick="closeView('tvGuideModal')" class="py-1 px-2 text-cosmo text-xs font-black">
-          <span data-i18n="closeBtn">إغلاق</span>
-        </button>
-        <h3 data-i18n="tvGuideTitle" class="text-sm font-black">طريقة الاقتران وتحميل تطبيق التلفاز</h3>
+  <div id="tvGuideModal" class="hidden fixed inset-0 z-50 bg-[#050507] text-white flex flex-col justify-between p-5 max-w-md mx-auto overflow-y-auto no-scrollbar">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+      <button onclick="closeView('tvGuideModal')" class="py-1 px-2 text-cosmo text-xs font-black">
+        <span data-i18n="closeBtn">إغلاق</span>
+      </button>
+      <h3 data-i18n="tvGuideTitle" class="text-sm font-black">طريقة الاقتران وتحميل تطبيق التلفاز</h3>
+    </div>
+
+    <div class="space-y-3.5 my-4 flex-1 text-right">
+      <div class="bg-[#0C0C10] border border-[#F5A623]/40 rounded-2xl p-4 space-y-2.5 text-center">
+        <div class="text-xs font-black text-cosmo">تحميل تطبيق SIYAQ TV عبر تطبيق Downloader</div>
+        <p class="text-[11px] text-slate-300 leading-relaxed">
+          افتح تطبيق <strong>Downloader</strong> على شاشة التلفاز (Android TV / Google TV) وأدخل رابط ملف <strong>SIYAQ-TV.apk</strong> أو اضغط أدناه:
+        </p>
+        <div class="flex items-center justify-center gap-4 pt-1">
+          <button onclick="downloadTvApkDirect()" class="py-1.5 px-3 text-cosmo text-xs font-black flex items-center gap-1.5">
+            <i class="fa-solid fa-download"></i>
+            <span>تحميل SIYAQ-TV.apk</span>
+          </button>
+          <button onclick="copyTvDownloadLink()" class="py-1.5 px-3 text-cosmo text-xs font-black flex items-center gap-1.5">
+            <i class="fa-solid fa-copy"></i>
+            <span>نسخ الرابط</span>
+          </button>
+        </div>
       </div>
 
-      <div class="space-y-3.5 my-4 flex-1 text-right">
-        <div class="bg-[#0C0C10] border border-[#F5A623]/40 rounded-2xl p-4 space-y-2.5 text-center">
-          <div class="text-xs font-black text-cosmo">تحميل تطبيق SIYAQ TV عبر تطبيق Downloader</div>
-          <p class="text-xs font-extrabold text-slate-200 leading-relaxed">
-            افتح تطبيق <strong>Downloader</strong> على شاشة التلفاز (Android TV / Google TV) وأدخل رابط ملف <strong>SIYAQ-TV.apk</strong> أو اضغط أدناه:
-          </p>
-          <div class="flex items-center justify-center gap-4 pt-1">
-            <button onclick="downloadTvApkDirect()" class="py-1.5 px-3 text-cosmo text-xs font-black flex items-center gap-1.5">
-              <i class="fa-solid fa-download"></i>
-              <span>تحميل SIYAQ-TV.apk</span>
-            </button>
-            <button onclick="copyTvDownloadLink()" class="py-1.5 px-3 text-cosmo text-xs font-black flex items-center gap-1.5">
-              <i class="fa-solid fa-copy"></i>
-              <span>نسخ الرابط</span>
-            </button>
-          </div>
+      <div class="bg-[#0C0C10] border border-slate-800 rounded-2xl p-4 space-y-2">
+        <div data-i18n="tvGuideSec2Title" class="text-sm font-black text-cosmo">1. خطوات التثبيت على شاشة التلفاز</div>
+        <div class="text-[11px] text-slate-200 space-y-1.5 pt-1 leading-relaxed">
+          <div>• حمّل تطبيق <strong>Downloader by AFTVnews</strong> من متجر Google Play في التلفاز.</div>
+          <div>• ثبّت تطبيق <strong>SIYAQ TV</strong> وفعّل خيار <strong>«تفعيل صلاحية الشاشة»</strong> لمرة واحدة.</div>
         </div>
+      </div>
 
-        <div class="bg-[#0C0C10] border border-slate-800 rounded-2xl p-4 space-y-2">
-          <div data-i18n="tvGuideSec2Title" class="text-sm font-black text-cosmo">1. خطوات التثبيت على شاشة التلفاز</div>
-          <div class="text-xs font-extrabold text-slate-100 space-y-2 pt-1 leading-relaxed">
-            <div>• حمّل تطبيق <strong>Downloader by AFTVnews</strong> من متجر Google Play في التلفاز.</div>
-            <div>• ثبّت تطبيق <strong>SIYAQ TV</strong> وفعّل خيار <strong>«تفعيل صلاحية الشاشة»</strong> لمرة واحدة.</div>
-          </div>
-        </div>
-
-        <div class="bg-[#0C0C10] border border-slate-800 rounded-2xl p-4 space-y-2">
-          <div data-i18n="tvGuideSec1Title" class="text-sm font-black text-white">2. طريقة الاقتران واللعب المباشر</div>
-          <div class="text-xs font-extrabold text-slate-200 space-y-2 pt-1 leading-relaxed">
-            <div data-i18n="tvGuideStep1">• افتح تطبيق <strong>SIYAQ TV</strong> على التلفاز ليظهر لك رمز <strong>QR</strong> ورقم الكود.</div>
-            <div data-i18n="tvGuideStep2">• من جوالك، ادخل قسم <strong>تلفاز (احترافي)</strong> واختر <strong>وضع الكاميرا</strong> أو <strong>وضع الشاشة</strong>.</div>
-            <div data-i18n="tvGuideStep3">• في <strong>وضع الشاشة</strong> يقرأ التلفاز الشاشة كاملة ويرسلها للجوال ليترجمها ويعيد كل نص فوق مكانه الأصلي.</div>
-          </div>
+      <div class="bg-[#0C0C10] border border-slate-800 rounded-2xl p-4 space-y-2">
+        <div data-i18n="tvGuideSec1Title" class="text-sm font-black text-white">2. طريقة الاقتران واللعب المباشر</div>
+        <div class="text-[11px] text-slate-300 space-y-1.5 pt-1 leading-relaxed">
+          <div data-i18n="tvGuideStep1">• افتح تطبيق <strong>SIYAQ TV</strong> على التلفاز ليظهر لك رمز <strong>QR</strong> ورقم الكود.</div>
+          <div data-i18n="tvGuideStep2">• من جوالك، ادخل قسم <strong>تلفاز (احترافي)</strong> واضغط <strong>مسح الرمز من شاشة التلفاز</strong>.</div>
+          <div data-i18n="tvGuideStep3">• وجّه كاميرا الجوال نحو حوار اللعبة الإنجليزي وستظهر الترجمة العربية مباشرة على شاشة التلفاز.</div>
         </div>
       </div>
     </div>
@@ -1106,17 +913,17 @@
   <!-- ========================================================================================= -->
   <!-- ================= 10. نافذة سياسة الخصوصية ================= -->
   <!-- ========================================================================================= -->
-  <div id="privacyModal" onclick="if(event.target===this) closeView('privacyModal')" class="sheet-modal-backdrop fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="sheet-modal-panel bg-[var(--bg-page)] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 text-right border-t sm:border border-[var(--border-col)] max-h-[85vh] overflow-y-auto no-scrollbar">
+  <div id="privacyModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[var(--bg-page)] w-full max-w-md rounded-3xl p-5 space-y-4 text-right border border-[var(--border-col)] max-h-[85vh] overflow-y-auto no-scrollbar">
       <div class="flex items-center justify-between border-b border-[var(--border-col)] pb-3">
         <h3 data-i18n="privacyTitle" class="text-sm font-black">سياسة الخصوصية وإخلاء المسؤولية</h3>
         <button onclick="closeView('privacyModal')" class="py-1 px-2 text-cosmo font-black text-base">✕</button>
       </div>
 
-      <div class="text-xs font-extrabold text-[var(--text-muted)] space-y-3 leading-relaxed">
-        <div class="clean-surface p-4 rounded-2xl space-y-1.5">
-          <div data-i18n="privSec1Title" class="font-black text-sm text-[var(--text-main)]">1. الخصوصية ومعالجة الكاميرا محلياً</div>
-          <p data-i18n="privSec1Desc" class="font-extrabold">تتم معالجة إطارات الكاميرا داخل الذاكرة المؤقتة لجهازك فقط لقراءة الحوارات بسرعة عالية، ولا يتم تسجيل أو تخزين أي صور على أي خادم خارجي.</p>
+      <div class="text-xs text-[var(--text-muted)] space-y-3 leading-relaxed">
+        <div class="clean-surface p-3.5 rounded-2xl space-y-1">
+          <div data-i18n="privSec1Title" class="font-black text-[var(--text-main)]">1. الخصوصية ومعالجة الكاميرا محلياً</div>
+          <p data-i18n="privSec1Desc">تتم معالجة إطارات الكاميرا داخل الذاكرة المؤقتة لجهازك فقط لقراءة الحوارات بسرعة عالية، ولا يتم تسجيل أو تخزين أي صور على أي خادم خارجي.</p>
         </div>
       </div>
 
@@ -1129,8 +936,8 @@
   <!-- ========================================================================================= -->
   <!-- ================= 11. نافذة سلة الاشتراكات ================= -->
   <!-- ========================================================================================= -->
-  <div id="subModal" onclick="if(event.target===this) closeView('subModal')" class="sheet-modal-backdrop fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="sheet-modal-panel bg-[var(--bg-page)] w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-5 space-y-4 text-center relative shadow-2xl border-t sm:border border-[var(--border-col)] max-h-[90vh] overflow-y-auto no-scrollbar">
+  <div id="subModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[var(--bg-page)] w-full max-w-sm rounded-3xl p-5 space-y-4 text-center relative shadow-2xl border border-[var(--border-col)] max-h-[90vh] overflow-y-auto no-scrollbar">
       <button onclick="closeView('subModal')" class="absolute top-4 left-4 py-1 px-2 text-cosmo font-black text-base">✕</button>
 
       <div class="mx-auto flex items-center justify-center text-2xl text-cosmo py-1">
@@ -1170,7 +977,7 @@
   </div>
 
   <script>
-    // ================= 0. أنيميشن الموشن جرافيك الاحترافي (الأصلي بدون تداخل القاف + وقوف متناسق مع حرف الياء) =================
+    // ================= 0. أنيميشن الموشن جرافيك الاحترافي (SIYAQ -> سياق) =================
     function easeInOutCubic(t) {
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
@@ -1192,7 +999,7 @@
         const elapsed = now - startTime;
         let barX = 29.5;
 
-        if (elapsed < 560) {
+        if (elapsed < 520) {
           barX = 29.5;
           engLeftRect.setAttribute('x', '0');
           engLeftRect.setAttribute('width', '35');
@@ -1202,8 +1009,8 @@
           engRightRect.setAttribute('width', '65');
           arRightRect.setAttribute('x', '44');
           arRightRect.setAttribute('width', '0');
-        } else if (elapsed < 1180) {
-          const p = easeInOutCubic((elapsed - 560) / 620);
+        } else if (elapsed < 1060) {
+          const p = easeInOutCubic((elapsed - 520) / 540);
           barX = 29.5 - p * (29.5 - 8.5);
           const splitLeft = barX + 2.3;
           engLeftRect.setAttribute('x', '0');
@@ -1214,8 +1021,8 @@
           engRightRect.setAttribute('width', '65');
           arRightRect.setAttribute('x', '44');
           arRightRect.setAttribute('width', '0');
-        } else if (elapsed < 2140) {
-          const p = easeInOutCubic((elapsed - 1180) / 960);
+        } else if (elapsed < 1920) {
+          const p = easeInOutCubic((elapsed - 1060) / 860);
           barX = 8.5 + p * (91.5 - 8.5);
           const splitRight = barX + 2.3;
           engLeftRect.setAttribute('width', '0');
@@ -1233,10 +1040,9 @@
             arRightRect.setAttribute('x', '44');
             arRightRect.setAttribute('width', Math.max(0, splitRight - 44).toFixed(2));
           }
-        } else if (elapsed < 2760) {
-          // يعود الخط البرتقالي ليقف عند 41.1 فيتصل بحرف الياء (45.69) بتناسق تام دون تداخل مع القاف
-          const p = easeInOutCubic((elapsed - 2140) / 620);
-          barX = 91.5 - p * (91.5 - 41.1);
+        } else if (elapsed < 2450) {
+          const p = easeInOutCubic((elapsed - 1920) / 530);
+          barX = 91.5 - p * (91.5 - 40.0);
           engLeftRect.setAttribute('width', '0');
           engRightRect.setAttribute('width', '0');
           arLeftRect.setAttribute('x', '0');
@@ -1244,7 +1050,7 @@
           arRightRect.setAttribute('x', '44');
           arRightRect.setAttribute('width', '56');
         } else {
-          barX = 41.1;
+          barX = 40.0;
           engLeftRect.setAttribute('width', '0');
           engRightRect.setAttribute('width', '0');
           arLeftRect.setAttribute('x', '0');
@@ -1255,7 +1061,7 @@
 
         barEl.setAttribute('x', barX.toFixed(2));
 
-        if (elapsed < 3420) {
+        if (elapsed < 3100) {
           requestAnimationFrame(step);
         } else {
           splashEl.classList.add('splash-fade-out');
@@ -1277,9 +1083,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      window.scrollTo(0, 0);
       runSplashScannerAnimation();
-      restoreSavedEngineAndKeys();
       applySubtitleStyles();
       updateProModelsDropdownUI();
     });
@@ -1290,28 +1094,22 @@
       ar: {
         modePhone: 'الهاتف (مجاني)',
         modeTv: 'تلفاز (احترافي)',
-        tvSubModeCamera: 'وضع الكاميرا',
-        tvSubModeScreen: 'وضع الشاشة',
         startFreeTrialBtn: 'بدء التجربة المجانية',
-        trialRemainingMsg: 'المتبقي من التجربة:',
-        pairTvTitle: 'وضع الكاميرا',
+        trialRemainingMsg: 'وقت التجربة المتبقي لوضع التلفاز:',
+        pairTvTitle: 'اقتران التلفاز',
         scanQrBtn: 'مسح الرمز من شاشة التلفاز',
         tvDownloadHubBtn: 'طريقة تحميل تطبيق سياق للتلفزيون',
-        screenModeHeadline: 'وضع الشاشة',
-        screenFeedWaiting: 'اضغط «بدء ترجمة الشاشة» ليقرأ التلفاز الحوارات والقوائم تلقائياً',
-        startScreenTransBtn: 'بدء ترجمة الشاشة',
-        stopScreenTransBtn: 'إيقاف ترجمة الشاشة',
         startCamBtn: 'تشغيل الكاميرا لبدء الترجمة',
         fitModeBtn: 'ملائمة',
         subStopped: 'الترجمة متوقفة',
-        waitingSubtitles: 'في انتظار الترجمة',
+        waitingSubtitles: 'في انتظار الترجمات',
         translateBtn: 'ترجمة',
         pauseBtn: 'إيقاف مؤقت',
         editAreaBtn: 'تعديل المنطقة',
         customizeTvBarBtn: 'تخصيص الترجمة',
         unpairBtn: 'إلغاء الاقتران',
         exitBtn: 'خروج',
-        fitReadyMsg: 'في انتظار الترجمة',
+        fitReadyMsg: 'في انتظار الترجمات',
         scanQrModalTitle: 'مسح الرمز من التلفاز',
         manualCodeLabel: 'أو أدخل رقم الرمز الظاهر تحت المربع:',
         pairNowBtn: 'اقتران',
@@ -1319,8 +1117,8 @@
         settingsTitle: 'الإعدادات',
         appLangLabel: 'لغة التطبيق',
         themeLabel: 'المظهر',
-        darkModeBtnLabel: 'داكن',
-        lightModeBtnLabel: 'فاتح',
+        darkModeBtnLabel: 'الوضع الداكن',
+        lightModeBtnLabel: 'الوضع الفاتح',
         subAppearanceMenu: 'تعديل مظهر الترجمة',
         engineSettingsMenu: 'تغيير القارئ ومحرك الترجمة',
         tvGuideMenu: 'طريقة الاقتران وتحميل تطبيق التلفاز',
@@ -1333,15 +1131,17 @@
         alignCenter: 'المنتصف',
         alignBottom: 'الأسفل',
         largeTextToggle: 'نص كبير وواضح',
-        smartCamouflageLabel: 'التمويه الذكي',
-        textSectionTitle: 'النص والخطوط وحدود الحروف',
+        textSectionTitle: 'النص',
         fontLabel: 'الخط',
         boldLabel: 'عريض وواضح',
         sizeLabel: 'الحجم',
         textColorLabel: 'لون النص',
-        strokeWidthLabel: 'سُمك حدود الخط',
-        strokeColorLabel: 'لون حدود الخط',
         textOpacityLabel: 'شفافية النص',
+        bgSectionTitle: 'خلفية الشريط',
+        bgColorLabel: 'لون الخلفية',
+        bgOpacityLabel: 'درجة التعتيم',
+        bgWidthLabel: 'أقصى عرض للشريط',
+        bgHeightLabel: 'حواف الخلفية',
         tvPosSectionTitle: 'موقع الترجمة على الشاشة',
         posXLabel: 'الموقع الأفقي',
         posYLabel: 'الموقع العمودي',
@@ -1349,33 +1149,29 @@
         closeBtn: 'إغلاق',
         tvGuideTitle: 'طريقة الاقتران وتحميل تطبيق التلفاز',
         ocrSmartOpt: 'قارئ الحوارات الذكي',
-        ocrStandardOpt: 'القارئ القياسي'
+        ocrStandardOpt: 'القارئ القياسي',
+        engGoogleOpt: 'Google Translate (مجاني)',
+        engMicrosoftOpt: 'Microsoft Translator (مجاني)'
       },
       en: {
         modePhone: 'Phone (Free)',
         modeTv: 'TV (Pro)',
-        tvSubModeCamera: 'Camera Mode',
-        tvSubModeScreen: 'Screen Mode',
         startFreeTrialBtn: 'Start Free Trial',
-        trialRemainingMsg: 'Trial Remaining:',
-        pairTvTitle: 'Camera Mode',
+        trialRemainingMsg: 'TV Mode Trial Remaining:',
+        pairTvTitle: 'TV Pairing',
         scanQrBtn: 'Scan QR Code from TV',
         tvDownloadHubBtn: 'How to Download SIYAQ TV App',
-        screenModeHeadline: 'Screen Mode',
-        screenFeedWaiting: 'Tap "Start Screen Translation" so TV reads dialogues & menus automatically',
-        startScreenTransBtn: 'Start Screen Translation',
-        stopScreenTransBtn: 'Stop Screen Translation',
         startCamBtn: 'Start Camera to Translate',
         fitModeBtn: 'Fit Mode',
         subStopped: 'Translation Paused',
-        waitingSubtitles: 'Waiting for translation',
+        waitingSubtitles: 'Waiting for subtitles',
         translateBtn: 'Translate',
         pauseBtn: 'Pause',
         editAreaBtn: 'Edit Area',
         customizeTvBarBtn: 'Customize Subtitles',
         unpairBtn: 'Unpair',
         exitBtn: 'Exit',
-        fitReadyMsg: 'Waiting for translation',
+        fitReadyMsg: 'Waiting for subtitles',
         scanQrModalTitle: 'Scan TV QR Code',
         manualCodeLabel: 'Or enter the 8-digit code shown on TV:',
         pairNowBtn: 'Pair',
@@ -1383,8 +1179,8 @@
         settingsTitle: 'Settings',
         appLangLabel: 'App Language',
         themeLabel: 'Appearance',
-        darkModeBtnLabel: 'Dark',
-        lightModeBtnLabel: 'Light',
+        darkModeBtnLabel: 'Dark Mode',
+        lightModeBtnLabel: 'Light Mode',
         subAppearanceMenu: 'Customize Subtitle Style',
         engineSettingsMenu: 'OCR & Translation Engine',
         tvGuideMenu: 'How to Pair & Download TV App',
@@ -1397,15 +1193,17 @@
         alignCenter: 'Center',
         alignBottom: 'Bottom',
         largeTextToggle: 'Large Clear Text',
-        smartCamouflageLabel: 'Smart Camouflage',
-        textSectionTitle: 'Text, Fonts & Stroke',
+        textSectionTitle: 'Text',
         fontLabel: 'Font',
         boldLabel: 'Bold & Clear',
         sizeLabel: 'Size',
         textColorLabel: 'Text Color',
-        strokeWidthLabel: 'Stroke Width',
-        strokeColorLabel: 'Stroke Color',
         textOpacityLabel: 'Text Opacity',
+        bgSectionTitle: 'Bar Background',
+        bgColorLabel: 'Background Color',
+        bgOpacityLabel: 'Background Opacity',
+        bgWidthLabel: 'Max Bar Width',
+        bgHeightLabel: 'Bar Padding',
         tvPosSectionTitle: 'Screen Position',
         posXLabel: 'Horizontal Position',
         posYLabel: 'Vertical Position',
@@ -1413,7 +1211,9 @@
         closeBtn: 'Close',
         tvGuideTitle: 'How to Pair & Download TV App',
         ocrSmartOpt: 'Smart Dialogue Reader',
-        ocrStandardOpt: 'Standard Reader'
+        ocrStandardOpt: 'Standard Reader',
+        engGoogleOpt: 'Google Translate (Free)',
+        engMicrosoftOpt: 'Microsoft Translator (Free)'
       }
     };
 
@@ -1426,34 +1226,15 @@
         const key = el.getAttribute('data-i18n');
         if (dict[key]) el.textContent = dict[key];
       });
-      const isLight = document.documentElement.classList.contains('light');
-      document.getElementById('themeSwitchBtn').textContent = isLight ? dict.lightModeBtnLabel : dict.darkModeBtnLabel;
-      updateTvPairingHeroUI();
       syncAllScanButtonsUI();
-    }
-
-    function toggleIosSwitch(btnId, forceState) {
-      const btn = document.getElementById(btnId);
-      if (!btn) return false;
-      const nextState = typeof forceState === 'boolean' ? forceState : !btn.classList.contains('active');
-      btn.classList.toggle('active', nextState);
-      btn.setAttribute('aria-checked', String(nextState));
-      return nextState;
-    }
-
-    function isIosSwitchActive(btnId) {
-      const btn = document.getElementById(btnId);
-      return btn ? btn.classList.contains('active') : false;
     }
 
     // ================= 2. المتغيرات العامة وحالة الطاقة =================
     let currentTabMode = 'phone';
-    let currentTvSubMode = 'camera'; // 'camera' | 'screen'
-    let isScreenModeActive = false;
     let isTvPaired = false;
     let isProUser = false;
     let trialActive = false;
-    let trialSecondsLeft = 7200; // 2h 00m
+    let trialSecondsLeft = 7200; // مدة التجربة المجانية: ساعتان (120 دقيقة)
     let trialInterval = null;
 
     let pairedRoomCode = '84920174';
@@ -1468,51 +1249,6 @@
 
     let activeReaderMode = 'smart_subtitle';
     let activeTranslator = 'google_gtx';
-
-    const ENGINE_API_METADATA = {
-      deepl_api: {
-        title: 'مفتاح DeepL API الرسمي الخاص بك:',
-        hint: 'يتصل مباشرة بسيرفر DeepL الرسمي (api-free.deepl.com أو api.deepl.com) بدون أي تحويل إلى Google.'
-      },
-      pro_gemini_2_5_flash: {
-        title: 'مفتاح Google Gemini API الرسمي:',
-        hint: 'يتصل مباشرة بسيرفر generativelanguage.googleapis.com (نموذج gemini-2.5-flash).'
-      },
-      pro_gpt_4o_mini: {
-        title: 'مفتاح OpenAI API الرسمي:',
-        hint: 'يتصل مباشرة بسيرفر api.openai.com (نموذج gpt-4o-mini).'
-      },
-      pro_claude_3_5_haiku: {
-        title: 'مفتاح Anthropic Claude API الرسمي:',
-        hint: 'يتصل مباشرة بسيرفر api.anthropic.com (نموذج claude-3-5-haiku).'
-      },
-      pro_deepseek_v3: {
-        title: 'مفتاح DeepSeek API الرسمي:',
-        hint: 'يتصل مباشرة بسيرفر api.deepseek.com (نموذج deepseek-chat).'
-      }
-    };
-
-    function getSavedApiKeyForEngine(engineId) {
-      return (localStorage.getItem(`siyaq_apikey_${engineId}`) || '').trim();
-    }
-
-    function saveApiKeyForEngine(engineId, keyVal) {
-      if (keyVal) {
-        localStorage.setItem(`siyaq_apikey_${engineId}`, keyVal.trim());
-      } else {
-        localStorage.removeItem(`siyaq_apikey_${engineId}`);
-      }
-    }
-
-    function restoreSavedEngineAndKeys() {
-      const savedEng = localStorage.getItem('siyaq_selected_engine');
-      if (savedEng && savedEng !== 'offline_local_model' && savedEng !== 'deepl_free') {
-        activeTranslator = savedEng;
-        const hiddenInput = document.getElementById('translatorEngineSelect');
-        if (hiddenInput) hiddenInput.value = savedEng;
-      }
-      syncApiKeyBoxVisibility(activeTranslator);
-    }
 
     let roiState = { left: 0.08, top: 0.55, width: 0.84, height: 0.28 };
     let lastGrayscaleGrid = null;
@@ -1597,122 +1333,25 @@
       'everything','someone','anyone','nobody','everyone','brother','sister','father','mother','friend'
     ]);
 
-    // التمويه الذكي مطفأ افتراضياً (camouflageBlurMode: false) ولا يشتغل إلا باختيار المستخدم
     let subStyleConfig = {
       fontFamily: "'Tajawal', sans-serif",
       isBold: true,
-      fontSize: 22,
+      fontSize: 24,
       textColor: '#FFFFFF',
       customTextColorSet: false,
       textOpacity: 100,
       bgColor: '#000000',
       bgOpacity: 85,
-      bgWidth: 92,
+      bgWidth: 85,
       bgHeight: 10,
       posX: 50,
-      posY: 82,
-      camouflageBlurMode: false,
-      strokeWidthDp: 0,
-      strokeColor: '#050507'
+      posY: 82
     };
     let activeColorTarget = 'text';
 
-    // دالة التمويه الذكي الحقيقية: تستخرج ألوان خلفية اللعبة من داخل مربع الترجمة فقط (يمين، وسط، يسار)
-    // وتستبعد لون الحروف البيضاء لتكوين خلفية مموهة عالية التغطية (96%) تخفي النص الأصلي وتطابق ألوان اللعبة
-    function sampleLiveGameColorFromVideo() {
-      try {
-        const isLandOpen = !document.getElementById('landscapeFullOverlay').classList.contains('hidden');
-        const video = isLandOpen ? document.getElementById('landscapeVideo') : document.getElementById('mainVideo');
-
-        // إذا كانت كاميرا الجوال مغلقة (مثل وضع الشاشة)، نرسل إشارة للتلفاز ليقوم بتمويه الخلفية محلياً من شاشته
-        if (!video || !video.videoWidth || !video.videoHeight) {
-          subStyleConfig.tvNativeBlur = true;
-          subStyleConfig.anchor = 'center';
-          return 'rgba(20, 24, 34, 0.95)';
-        }
-
-        const cvs = document.getElementById('camColorSampleCanvas');
-        const ctx = cvs.getContext('2d', { willReadFrequently: true });
-
-        // قص منطقة مربع الترجمة فقط بدلاً من الشاشة كلها لأخذ لون خلفية الحوار الحقيقي
-        const vw = video.videoWidth;
-        const vh = video.videoHeight;
-        const sx = Math.max(0, Math.floor((roiState.left || 0.08) * vw));
-        const sy = Math.max(0, Math.floor((roiState.top || 0.55) * vh));
-        const sw = Math.max(32, Math.floor((roiState.width || 0.84) * vw));
-        const sh = Math.max(16, Math.floor((roiState.height || 0.28) * vh));
-
-        ctx.drawImage(video, sx, sy, sw, sh, 0, 0, 32, 16);
-        const data = ctx.getImageData(0, 0, 32, 16).data;
-
-        // تقسيم منطقة النص إلى 3 شرائح (يسار، وسط، يمين) لمحاكاة تدرج ألوان اللعبة الحقيقي
-        let zones = [
-          { r: 0, g: 0, b: 0, c: 0 },
-          { r: 0, g: 0, b: 0, c: 0 },
-          { r: 0, g: 0, b: 0, c: 0 }
-        ];
-
-        for (let p = 0; p < 512; p++) {
-          const i = p * 4;
-          const r = data[i], g = data[i + 1], b = data[i + 2];
-          const lum = (r * 77 + g * 150 + b * 29) >> 8;
-
-          // استبعاد نقاط الحروف الساطعة جداً (النص الأصلي) لأخذ لون خلفية اللعبة الصافي فقط
-          if (lum < 165) {
-            const colX = p % 32;
-            const zIdx = colX < 11 ? 0 : (colX < 22 ? 1 : 2);
-            zones[zIdx].r += r;
-            zones[zIdx].g += g;
-            zones[zIdx].b += b;
-            zones[zIdx].c++;
-          }
-        }
-
-        const resolveZoneRgb = (z) => {
-          if (z.c === 0) return { r: 22, g: 26, b: 36 };
-          return {
-            r: Math.round(z.r / z.c),
-            g: Math.round(z.g / z.c),
-            b: Math.round(z.b / z.c)
-          };
-        };
-
-        const cLeft = resolveZoneRgb(zones[0]);
-        const cMid = resolveZoneRgb(zones[1]);
-        const cRight = resolveZoneRgb(zones[2]);
-
-        // حفظ الألوان الحقيقية وإعدادات التوسيط لإرسالها إلى التلفاز
-        subStyleConfig.bgColor = rgbToHex(cMid.r, cMid.g, cMid.b);
-        subStyleConfig.bgOpacity = 96;
-        subStyleConfig.tvNativeBlur = true;
-        subStyleConfig.anchor = 'center';
-        subStyleConfig.camouflageStops = [
-          rgbToHex(cRight.r, cRight.g, cRight.b),
-          rgbToHex(cMid.r, cMid.g, cMid.b),
-          rgbToHex(cLeft.r, cLeft.g, cLeft.b)
-        ];
-
-        // إرجاع لون الخلفية بعتامة 96% ليخفي النص الإنجليزي تماماً مع إظهار لون اللعبة الحقيقي
-        return `rgba(${cMid.r}, ${cMid.g}, ${cMid.b}, 0.96)`;
-      } catch (e) {
-        return 'rgba(20, 24, 34, 0.95)';
-      }
-    }
-
     // ================= 3. المزامنة الفورية مع التلفاز عبر MQTT =================
-    // 1. تصفير رمز الغرفة عند التشغيل حتى يتم الاقتران الحقيقي بالتلفاز
-    pairedRoomCode = '';
-
-    // 2. ذاكرة لحفظ النصوص المترجمة حسب موقعها على شاشة التلفاز لمنع الرمشة وتبدل الأماكن
-    let screenOverlayMemory = new Map();
-
-    // 3. متغير لحفظ أحدث لقطة شاشة قادمة من التلفاز إذا كان الجوال مشغولاً بترجمة لقطة سابقة
-    let pendingScreenPacket = null;
-
     let mqttClient = null;
-    let isProcessingScreenBatch = false;
 
-    // دالة تهيئة الاتصال الفوري بين الجوال والتلفاز
     function initCrossDeviceSync() {
       try {
         if (window.mqtt) {
@@ -1720,39 +1359,16 @@
             keepalive: 20,
             reconnectPeriod: 1000
           });
-
           mqttClient.on('connect', () => {
             if (isTvPaired && pairedRoomCode) {
               mqttClient.subscribe(`siyaq/tv/sec/${pairedRoomCode}`);
-              mqttClient.subscribe(`siyaq/tv/ocr/${pairedRoomCode}`);
-              // إعادة تأكيد الوضع النشط للتلفاز تلقائياً عند عودة الاتصال
-              sendCrossDeviceEvent({
-                type: 'TV_MODE_SWITCH',
-                mode: currentTvSubMode === 'screen' ? 'screen_ocr' : 'camera',
-                active: currentTvSubMode === 'screen' ? isScreenModeActive : isScanning,
-                style: subStyleConfig
-              });
             }
           });
-
           mqttClient.on('message', (topic, payload) => {
             try {
               const data = JSON.parse(payload.toString());
-              // تجاهل أي رسالة صادرة من الجوال نفسه لمنع التداخل
-              if (data.sender === 'phone') return;
-
               if (data.type === 'UNPAIRED' && isTvPaired) {
                 handleRemoteTvUnpair();
-              } else if (
-                (data.type === 'SCREEN_TEXTS_BATCH' || data.type === 'TV_SCREEN_TEXT_BLOCKS') &&
-                isTvPaired
-              ) {
-                handleIncomingTvScreenTextBlocks(data);
-              } else if (
-                (data.type === 'SCREEN_CROPS_BATCH' || data.type === 'TV_SCREEN_IMAGE_CROPS') &&
-                isTvPaired
-              ) {
-                handleIncomingTvScreenImageCrops(data);
               }
             } catch (e) {}
           });
@@ -1761,357 +1377,12 @@
     }
     initCrossDeviceSync();
 
-    // دالة إرسال الترجمات والأوامر من الجوال إلى التلفاز مع توقيع المرسل
     function sendCrossDeviceEvent(dataObj) {
-      if ((dataObj.type === 'SUB_UPDATE' || dataObj.type === 'SUB_CLEAR' || dataObj.type === 'SCREEN_OVERLAY_BATCH') && !isTvPaired) {
+      if ((dataObj.type === 'SUB_UPDATE' || dataObj.type === 'SUB_CLEAR') && !isTvPaired) {
         return;
       }
       if (mqttClient && mqttClient.connected && pairedRoomCode) {
-        const packetWithSender = { ...dataObj, sender: 'phone' };
-        mqttClient.publish(`siyaq/tv/sec/${pairedRoomCode}`, JSON.stringify(packetWithSender));
-      }
-    }
-
-    // دالة تنظيف النص القادم من شاشة التلفاز والتأكد من أنه نص أصلي وليس ترجمة عربية
-    function cleanScreenBlockText(rawText) {
-      if (!rawText) return '';
-      const str = String(rawText).trim();
-
-      // حماية: إذا احتوى النص على حروف عربية (قرأ الطبقة الشفافة بالخطأ) نتجاهله فوراً
-      if (/[\u0600-\u06FF]/.test(str)) return '';
-
-      const cleaned = str
-        .replace(/[\r\n]+/g, ' ')
-        .replace(/[^a-zA-Z0-9.,?!'"\-:;()/&\s]/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      if (!cleaned) return '';
-      const alphaCount = (cleaned.match(/[a-zA-Z]/g) || []).length;
-      if (alphaCount < 2) return '';
-      return cleaned;
-    }
-
-    // دالة توحيد إحداثيات ومقاسات المستطيلات لتتطابق بين شاشة التلفاز والجوال
-    function normalizeBlockCoordinates(block, screenW, screenH) {
-      const sw = Number(screenW) || 1920;
-      const sh = Number(screenH) || 1080;
-
-      let x = Number(block.x ?? block.left ?? 0);
-      let y = Number(block.y ?? block.top ?? 0);
-
-      // حساب العرض والارتفاع تلقائياً حتى لو أرسل التلفاز نقطة النهاية (right / bottom) فقط
-      let rawW = block.w ?? block.width;
-      if (rawW === undefined && block.right !== undefined && block.left !== undefined) {
-        rawW = Number(block.right) - Number(block.left);
-      }
-      let rawH = block.h ?? block.height;
-      if (rawH === undefined && block.bottom !== undefined && block.top !== undefined) {
-        rawH = Number(block.bottom) - Number(block.top);
-      }
-
-      let w = Number(rawW ?? 0.15);
-      let h = Number(rawH ?? 0.05);
-
-      // تحويل القيم من بكسل إلى نسبة مئوية (من 0 إلى 1)
-      if (x > 1.01 || y > 1.01 || w > 1.01 || h > 1.01) {
-        x = x / sw;
-        y = y / sh;
-        w = w / sw;
-        h = h / sh;
-      }
-
-      x = Math.max(0, Math.min(0.98, Number(x.toFixed(4))));
-      y = Math.max(0, Math.min(0.98, Number(y.toFixed(4))));
-      w = Math.max(0.03, Math.min(1 - x, Number(w.toFixed(4))));
-      h = Math.max(0.025, Math.min(1 - y, Number(h.toFixed(4))));
-
-      return { x, y, w, h };
-    }
-
-    // دالة مساعدة لتوليد معرف ثابت لكل نص بناءً على إحداثياته على الشاشة
-    function buildStableSpatialId(coords, indexFallback) {
-      const gridX = Math.round(coords.x * 25);
-      const gridY = Math.round(coords.y * 25);
-      return `pos_${gridX}_${gridY}_${indexFallback}`;
-    }
-
-    // دالة ترجمة قائمة نصوص الشاشة دفعة واحدة بسرعة عالية ودون حظر من المتصفح
-    async function translateScreenBatchInstant(englishList) {
-      const results = new Array(englishList.length).fill('');
-      const uncachedIndices = [];
-      const uncachedTexts = [];
-
-      // 1. فحص ما إذا كانت بعض الجمل مترجمة مسبقاً في الذاكرة السريعة
-      for (let i = 0; i < englishList.length; i++) {
-        const en = englishList[i];
-        const normKey = en.toLowerCase().replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
-        const cacheKey = `${activeTranslator}::${en.toLowerCase()}`;
-
-        if (INSTANT_GAMING_SHORT_PHRASES[normKey]) {
-          results[i] = INSTANT_GAMING_SHORT_PHRASES[normKey];
-        } else if (translationMemoryCache.has(cacheKey)) {
-          results[i] = translationMemoryCache.get(cacheKey);
-        } else {
-          uncachedIndices.push(i);
-          uncachedTexts.push(en);
-        }
-      }
-
-      if (uncachedTexts.length === 0) return results;
-
-      // 2. إذا كانت جملة واحدة فقط، نترجمها مباشرة
-      if (uncachedTexts.length === 1) {
-        const singleAr = await translateFullSentenceInstant(uncachedTexts[0]);
-        results[uncachedIndices[0]] = singleAr || '';
-        return results;
-      }
-
-      // 3. دمج عدة جمل في طلب واحد سريع لمحرك Google لمنع تجميد أو حظر الطلبات
-      if (activeTranslator === 'google_gtx') {
-        try {
-          const combinedPayload = uncachedTexts.join('\n');
-          const controller = new AbortController();
-          const tId = setTimeout(() => { try { controller.abort(); } catch (e) {} }, 2200);
-
-          const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(combinedPayload)}`;
-          const res = await fetch(url, { signal: controller.signal });
-          clearTimeout(tId);
-
-          if (res.ok) {
-            const data = await res.json();
-            const fullTranslatedText = Array.isArray(data) && Array.isArray(data[0])
-              ? data[0].map(seg => seg[0]).join('')
-              : '';
-            const splitLines = fullTranslatedText.split('\n').map(l => polishPureArabicGamingOutput(l));
-
-            if (splitLines.length === uncachedTexts.length) {
-              for (let k = 0; k < uncachedTexts.length; k++) {
-                const ar = splitLines[k] || '';
-                if (ar) {
-                  setBoundedCache(`${activeTranslator}::${uncachedTexts[k].toLowerCase()}`, ar);
-                  results[uncachedIndices[k]] = ar;
-                }
-              }
-              return results;
-            }
-          }
-        } catch (e) {}
-      }
-
-      // 4. للمحركات الأخرى: تقسيم النصوص إلى مجموعات صغيرة (3 نصوص في كل دفعة)
-      const CHUNK_SIZE = 3;
-      for (let start = 0; start < uncachedTexts.length; start += CHUNK_SIZE) {
-        const slice = uncachedTexts.slice(start, start + CHUNK_SIZE);
-        const translatedSlice = await Promise.all(
-          slice.map(txt => translateFullSentenceInstant(txt))
-        );
-        for (let m = 0; m < slice.length; m++) {
-          results[uncachedIndices[start + m]] = translatedSlice[m] || '';
-        }
-      }
-
-      return results;
-    }
-
-    // دالة استقبال النصوص المقروءة من شاشة التلفاز وترجمتها وإعادتها لمواقعها الدقيقة
-    async function handleIncomingTvScreenTextBlocks(packet) {
-      if (isProcessingScreenBatch) {
-        pendingScreenPacket = packet;
-        return;
-      }
-      isProcessingScreenBatch = true;
-
-      try {
-        const rawBlocks = Array.isArray(packet.blocks) ? packet.blocks : [];
-        const frameId = packet.frameId || Date.now();
-        const screenW = packet.screenWidth || packet.vw || 1920;
-        const screenH = packet.screenHeight || packet.vh || 1080;
-
-        const validBlocks = [];
-        const textsToTranslate = [];
-        const preResolvedArabic = {};
-
-        for (let i = 0; i < rawBlocks.length; i++) {
-          const b = rawBlocks[i];
-          const cleanEn = cleanScreenBlockText(b.text || b.en || '');
-          if (!cleanEn) continue;
-
-          const coords = normalizeBlockCoordinates(b, screenW, screenH);
-          const stableId = b.id || buildStableSpatialId(coords, i);
-          const posKey = `${Math.round(coords.x * 20)}_${Math.round(coords.y * 20)}`;
-
-          // إذا لم يتغير النص في هذا الموقع على الشاشة، نثبّت ترجمته وإحداثياته فوراً
-          const prevMem = screenOverlayMemory.get(posKey);
-          if (prevMem && isSameSubtitleLocked(cleanEn, prevMem.en)) {
-            const idx = validBlocks.length;
-            validBlocks.push({
-              id: stableId,
-              posKey,
-              en: prevMem.en,
-              ...prevMem.coords
-            });
-            preResolvedArabic[idx] = prevMem.ar;
-          } else {
-            const idx = validBlocks.length;
-            validBlocks.push({
-              id: stableId,
-              posKey,
-              en: cleanEn,
-              ...coords
-            });
-            textsToTranslate.push(cleanEn);
-          }
-        }
-
-        if (validBlocks.length === 0) {
-          screenOverlayMemory.clear();
-          sendCrossDeviceEvent({
-            type: 'SCREEN_OVERLAY_BATCH',
-            frameId,
-            items: [],
-            style: subStyleConfig
-          });
-        } else {
-          const newlyTranslatedList = textsToTranslate.length > 0
-            ? await translateScreenBatchInstant(textsToTranslate)
-            : [];
-
-          const newMemoryMap = new Map();
-          const overlayItems = [];
-
-          let transCounter = 0;
-          for (let i = 0; i < validBlocks.length; i++) {
-            const blk = validBlocks[i];
-            const ar = preResolvedArabic[i] !== undefined
-              ? preResolvedArabic[i]
-              : (newlyTranslatedList[transCounter++] || '');
-
-            if (!ar) continue;
-
-            newMemoryMap.set(blk.posKey, {
-              en: blk.en,
-              ar,
-              coords: { x: blk.x, y: blk.y, w: blk.w, h: blk.h }
-            });
-
-            overlayItems.push({
-              id: blk.id,
-              en: blk.en,
-              ar,
-              x: blk.x,
-              y: blk.y,
-              w: blk.w,
-              h: blk.h
-            });
-          }
-
-          screenOverlayMemory = newMemoryMap;
-
-          sendCrossDeviceEvent({
-            type: 'SCREEN_OVERLAY_BATCH',
-            frameId,
-            items: overlayItems,
-            style: subStyleConfig
-          });
-        }
-      } catch (e) {}
-
-      isProcessingScreenBatch = false;
-
-      // إذا وصلت لقطة جديدة أثناء انشغال الجوال، نعالجها الآن فوراً
-      if (pendingScreenPacket) {
-        const nextPacket = pendingScreenPacket;
-        pendingScreenPacket = null;
-        handleIncomingTvScreenTextBlocks(nextPacket);
-      }
-    }
-
-    // مراقب تلقائي لمسح نص المعاينة عن التلفاز عند إغلاق نافذة تخصيص المظهر
-    (function setupAppearanceModalTvCleanup() {
-      const subAppModalEl = document.getElementById('subAppearanceModal');
-      if (subAppModalEl && window.MutationObserver) {
-        new MutationObserver(() => {
-          if (!subAppModalEl.classList.contains('modal-open') && isTvPaired && currentTvSubMode === 'camera' && !lastValidArSentence) {
-            sendCrossDeviceEvent({ type: 'SUB_CLEAR' });
-          }
-        }).observe(subAppModalEl, { attributes: true, attributeFilter: ['class'] });
-      }
-    })();
-
-    async function handleIncomingTvScreenImageCrops(packet) {
-      if (isProcessingScreenBatch || !tessWorker) return;
-      isProcessingScreenBatch = true;
-
-      const crops = Array.isArray(packet.crops) ? packet.crops : [];
-      const frameId = packet.frameId || Date.now();
-      const screenW = packet.screenWidth || 1920;
-      const screenH = packet.screenHeight || 1080;
-
-      try {
-        const extractedBlocks = [];
-        for (let i = 0; i < crops.length; i++) {
-          const c = crops[i];
-          if (!c.imageBase64) continue;
-          const res = await tessWorker.recognize(c.imageBase64);
-          const text = cleanScreenBlockText(res?.data?.text || '');
-          if (text) {
-            extractedBlocks.push({
-              id: c.id || `crop_${i}`,
-              text,
-              x: c.x,
-              y: c.y,
-              w: c.w,
-              h: c.h
-            });
-          }
-        }
-        isProcessingScreenBatch = false;
-        await handleIncomingTvScreenTextBlocks({
-          frameId,
-          screenWidth: screenW,
-          screenHeight: screenH,
-          blocks: extractedBlocks
-        });
-      } catch (e) {
-        isProcessingScreenBatch = false;
-      }
-    }
-
-    function toggleTvFullScreenTranslation() {
-      if (!isTvPaired) {
-        notify(currentAppLang === 'ar' ? 'يرجى الاقتران بالتلفاز أولاً' : 'Please pair with TV first');
-        return;
-      }
-      isScreenModeActive = !isScreenModeActive;
-      const btnIcon = document.getElementById('screenModeToggleIcon');
-      const btnLabel = document.getElementById('screenModeToggleLabel');
-      const statusTitle = document.getElementById('screenModeStatusTitle');
-      const statusSub = document.getElementById('screenModeStatusSub');
-      const dict = UI_TRANSLATIONS[currentAppLang];
-
-      if (isScreenModeActive) {
-        if (btnIcon) btnIcon.className = 'fa-solid fa-pause';
-        if (btnLabel) btnLabel.textContent = dict.stopScreenTransBtn;
-        if (statusTitle) statusTitle.textContent = currentAppLang === 'ar' ? 'ترجمة الشاشة نشطة الآن' : 'Screen Translation Active';
-        if (statusSub) statusSub.textContent = currentAppLang === 'ar' ? 'يقرأ التلفاز الشاشة ويعرض الترجمة فوق النصوص تلقائياً' : 'TV is reading and overlaying translations live';
-        sendCrossDeviceEvent({
-          type: 'TV_MODE_SWITCH',
-          mode: 'screen_ocr',
-          active: true,
-          style: subStyleConfig
-        });
-      } else {
-        if (btnIcon) btnIcon.className = 'fa-solid fa-play';
-        if (btnLabel) btnLabel.textContent = dict.startScreenTransBtn;
-        if (statusTitle) statusTitle.textContent = dict.screenModeHeadline;
-        if (statusSub) statusSub.textContent = dict.screenFeedWaiting;
-        sendCrossDeviceEvent({
-          type: 'TV_MODE_SWITCH',
-          mode: 'screen_ocr',
-          active: false
-        });
-        sendCrossDeviceEvent({ type: 'SUB_CLEAR' });
+        mqttClient.publish(`siyaq/tv/sec/${pairedRoomCode}`, JSON.stringify(dataObj));
       }
     }
 
@@ -2164,31 +1435,7 @@
     }
     initTesseract();
 
-    // ================= 5. التبديل بين الأوضاع وتغيير أيقونة الواجهة لكل وضع =================
-    function updateTvPairingHeroUI() {
-      const camHero = document.getElementById('heroIconCameraMode');
-      const scrHero = document.getElementById('heroIconScreenMode');
-      const titleEl = document.getElementById('pairTvDynamicTitle');
-
-      if (currentTvSubMode === 'screen') {
-        if (camHero) camHero.classList.add('hidden');
-        if (scrHero) scrHero.classList.remove('hidden');
-        if (titleEl) {
-          titleEl.textContent = currentAppLang === 'ar'
-            ? 'وضع الشاشة'
-            : 'Screen Mode';
-        }
-      } else {
-        if (scrHero) scrHero.classList.add('hidden');
-        if (camHero) camHero.classList.remove('hidden');
-        if (titleEl) {
-          titleEl.textContent = currentAppLang === 'ar'
-            ? 'وضع الكاميرا'
-            : 'Camera Mode';
-        }
-      }
-    }
-
+    // ================= 5. التبديل بين الوضعين وإيقاف الكاميرا تماماً عند التبديل =================
     function switchMode(mode) {
       if (currentTabMode === mode) return;
 
@@ -2196,7 +1443,7 @@
         stopOcrScanning();
       }
 
-      if (mode === 'tv' && (!isTvPaired || currentTvSubMode === 'screen')) {
+      if (mode === 'tv' && !isTvPaired) {
         stopCameraFeed();
       }
 
@@ -2204,102 +1451,28 @@
 
       const btnPhone = document.getElementById('tabBtnPhone');
       const btnTv = document.getElementById('tabBtnTv');
-      const tvSubBar = document.getElementById('tvSubModeSelectorBar');
       const tvUnpairedSec = document.getElementById('tvUnpairedSection');
       const camWorkspaceSec = document.getElementById('cameraWorkspaceSection');
-      const screenWorkspaceSec = document.getElementById('tvScreenModeWorkspace');
 
       if (mode === 'phone') {
-        btnPhone.className = 'flex-1 py-1.5 text-cosmo font-black text-sm flex items-center justify-center gap-2 transition-all';
-        btnTv.className = 'flex-1 py-1.5 font-extrabold text-sm text-[var(--text-muted)] flex items-center justify-center gap-2 transition-all';
-        tvSubBar.classList.add('hidden');
+        btnPhone.className = 'flex-1 py-2 text-cosmo font-black text-sm flex items-center justify-center gap-2 transition-all';
+        btnTv.className = 'flex-1 py-2 font-bold text-sm text-[var(--text-muted)] flex items-center justify-center gap-2 transition-all';
         tvUnpairedSec.classList.add('hidden');
-        screenWorkspaceSec.classList.add('hidden');
         camWorkspaceSec.classList.remove('hidden');
       } else {
-        btnTv.className = 'flex-1 py-1.5 text-cosmo font-black text-sm flex items-center justify-center gap-2 transition-all';
-        btnPhone.className = 'flex-1 py-1.5 font-extrabold text-sm text-[var(--text-muted)] flex items-center justify-center gap-2 transition-all';
-        tvSubBar.classList.remove('hidden');
-        updateTvPairingHeroUI();
-        applyTvSubModeLayout();
+        btnTv.className = 'flex-1 py-2 text-cosmo font-black text-sm flex items-center justify-center gap-2 transition-all';
+        btnPhone.className = 'flex-1 py-2 font-bold text-sm text-[var(--text-muted)] flex items-center justify-center gap-2 transition-all';
+        if (isTvPaired) {
+          tvUnpairedSec.classList.add('hidden');
+          camWorkspaceSec.classList.remove('hidden');
+        } else {
+          tvUnpairedSec.classList.remove('hidden');
+          camWorkspaceSec.classList.add('hidden');
+        }
       }
 
       refreshTrialUI();
       updateSubtitleVisibilityForActiveMode();
-    }
-
-    function selectTvSubMode(subMode) {
-      currentTvSubMode = subMode;
-      const btnCam = document.getElementById('tvSubBtnCamera');
-      const btnScr = document.getElementById('tvSubBtnScreen');
-
-      if (subMode === 'camera') {
-        btnCam.style.backgroundColor = 'rgba(245, 166, 35, 0.15)';
-        btnCam.style.color = '#F5A623';
-        btnCam.style.border = '1px solid rgba(245, 166, 35, 0.38)';
-        btnCam.classList.add('font-black');
-
-        btnScr.style.backgroundColor = 'transparent';
-        btnScr.style.color = 'var(--text-muted)';
-        btnScr.style.border = '1px solid transparent';
-        btnScr.classList.remove('font-black');
-
-        if (isScreenModeActive) {
-          isScreenModeActive = false;
-          sendCrossDeviceEvent({ type: 'TV_MODE_SWITCH', mode: 'camera', active: false });
-        }
-      } else {
-        btnScr.style.backgroundColor = 'rgba(245, 166, 35, 0.15)';
-        btnScr.style.color = '#F5A623';
-        btnScr.style.border = '1px solid rgba(245, 166, 35, 0.38)';
-        btnScr.classList.add('font-black');
-
-        btnCam.style.backgroundColor = 'transparent';
-        btnCam.style.color = 'var(--text-muted)';
-        btnCam.style.border = '1px solid transparent';
-        btnCam.classList.remove('font-black');
-
-        if (isScanning) stopOcrScanning();
-        stopCameraFeed();
-        if (isTvPaired) {
-          sendCrossDeviceEvent({
-            type: 'TV_MODE_SWITCH',
-            mode: 'screen_ocr',
-            active: isScreenModeActive,
-            style: subStyleConfig
-          });
-        }
-      }
-
-      updateTvPairingHeroUI();
-      if (currentTabMode === 'tv') {
-        applyTvSubModeLayout();
-        updateSubtitleVisibilityForActiveMode();
-      }
-    }
-
-    function applyTvSubModeLayout() {
-      const tvUnpairedSec = document.getElementById('tvUnpairedSection');
-      const camWorkspaceSec = document.getElementById('cameraWorkspaceSection');
-      const screenWorkspaceSec = document.getElementById('tvScreenModeWorkspace');
-
-      if (!isTvPaired) {
-        tvUnpairedSec.classList.remove('hidden');
-        camWorkspaceSec.classList.add('hidden');
-        screenWorkspaceSec.classList.add('hidden');
-        return;
-      }
-
-      tvUnpairedSec.classList.add('hidden');
-      if (currentTvSubMode === 'screen') {
-        stopCameraFeed();
-        camWorkspaceSec.classList.add('hidden');
-        screenWorkspaceSec.classList.remove('hidden');
-      } else {
-        screenWorkspaceSec.classList.add('hidden');
-        camWorkspaceSec.classList.remove('hidden');
-        if (!videoStreamObj) startCameraFeed();
-      }
     }
 
     function updateSubtitleVisibilityForActiveMode() {
@@ -2312,7 +1485,7 @@
       if (hidePhoneSubBox) {
         subCard.classList.add('hidden');
         if (landSubCard) landSubCard.classList.add('hidden');
-        if (tvStrip) tvStrip.classList.toggle('hidden', currentTvSubMode === 'screen');
+        if (tvStrip) tvStrip.classList.remove('hidden');
       } else {
         subCard.classList.remove('hidden');
         if (landSubCard) landSubCard.classList.remove('hidden');
@@ -2320,17 +1493,7 @@
       }
     }
 
-    // ================= 6. إدارة التجربة المجانية بصيغة الساعات والدقائق (2h 00m) =================
-    function formatTrialTimeHoursMinutes(totalSec) {
-      const hrs = Math.floor(totalSec / 3600);
-      const mins = Math.floor((totalSec % 3600) / 60);
-      const secs = totalSec % 60;
-      if (hrs > 0) {
-        return `${hrs}h ${String(mins).padStart(2, '0')}m`;
-      }
-      return `0h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
-    }
-
+    // ================= 6. إدارة التجربة المجانية (ساعتان) =================
     function refreshTrialUI() {
       const actBox = document.getElementById('trialActivationBox');
       const banner = document.getElementById('trialBanner');
@@ -2342,7 +1505,6 @@
       if (trialActive && trialSecondsLeft > 0) {
         actBox.classList.add('hidden');
         banner.classList.remove('hidden');
-        document.getElementById('trialTimerText').textContent = formatTrialTimeHoursMinutes(trialSecondsLeft);
       } else {
         actBox.classList.remove('hidden');
         banner.classList.add('hidden');
@@ -2361,7 +1523,9 @@
         trialInterval = setInterval(() => {
           if (trialSecondsLeft > 0) {
             trialSecondsLeft--;
-            document.getElementById('trialTimerText').textContent = formatTrialTimeHoursMinutes(trialSecondsLeft);
+            const m = String(Math.floor(trialSecondsLeft / 60)).padStart(2, '0');
+            const s = String(trialSecondsLeft % 60).padStart(2, '0');
+            document.getElementById('trialTimerText').textContent = `${m}:${s}`;
           } else {
             clearInterval(trialInterval);
             trialActive = false;
@@ -2371,7 +1535,7 @@
           }
         }, 1000);
       }
-      notify(currentAppLang === 'ar' ? 'بدأت التجربة المجانية لمدة ساعتين (2h 00m) ✓' : '2-hour free trial started ✓');
+      notify(currentAppLang === 'ar' ? 'بدأت التجربة المجانية لمدة ساعتين ✓' : '2-hour free trial started ✓');
     }
 
     function canAccessTvProFeatures() {
@@ -2384,7 +1548,7 @@
       return false;
     }
 
-    // ================= 7. الكاميرا فائقة الحدة مع إدارة الحرارة الذكية (الأصلية 100%) =================
+    // ================= 7. الكاميرا فائقة الحدة مع إدارة الحرارة الذكية =================
     async function selectSharpestBackCameraStream() {
       const baseConstraints = {
         video: {
@@ -2520,8 +1684,13 @@
 
       const camCover = document.getElementById('camCover');
       const roiRect = document.getElementById('roiRect');
+      const camBox = document.getElementById('cameraBox');
       if (camCover) camCover.classList.remove('hidden');
       if (roiRect) roiRect.classList.add('hidden');
+      if (camBox) {
+        camBox.classList.replace('h-28', 'h-56');
+        camBox.classList.replace('w-40', 'w-full');
+      }
     }
 
     function triggerTapToFocus() {
@@ -2530,7 +1699,7 @@
       focusCameraOnRoiBox(true);
     }
 
-    // ================= 8. تحريك وتغيير حجم مربع الترجمة (مقفل تماماً أثناء الترجمة) =================
+    // ================= 8. تحريك وتغيير حجم مربع الترجمة =================
     function bindRoiInteraction(rectId, handleId, containerId) {
       const rectEl = document.getElementById(rectId);
       const handleEl = document.getElementById(handleId);
@@ -2541,7 +1710,6 @@
       let startRoi = { ...roiState };
 
       handleEl.addEventListener('pointerdown', (e) => {
-        if (isScanning) return;
         e.stopPropagation();
         mode = 'resize';
         startX = e.clientX;
@@ -2551,7 +1719,6 @@
       });
 
       rectEl.addEventListener('pointerdown', (e) => {
-        if (isScanning) return;
         if (e.target === handleEl || handleEl.contains(e.target)) return;
         mode = 'move';
         startX = e.clientX;
@@ -2561,7 +1728,7 @@
       });
 
       const onPointerMove = (e) => {
-        if (!mode || isScanning) return;
+        if (!mode) return;
         const bounds = containerEl.getBoundingClientRect();
         if (!bounds.width || !bounds.height) return;
 
@@ -2608,18 +1775,7 @@
       });
     }
 
-    function setRoiBoxLockedState(locked) {
-      const r1 = document.getElementById('roiRect');
-      const r2 = document.getElementById('landRoiRect');
-      const h1 = document.getElementById('roiHandle');
-      const h2 = document.getElementById('landRoiHandle');
-      if (r1) r1.style.pointerEvents = locked ? 'none' : 'auto';
-      if (r2) r2.style.pointerEvents = locked ? 'none' : 'auto';
-      if (h1) h1.classList.toggle('hidden', locked);
-      if (h2) h2.classList.toggle('hidden', locked);
-    }
-
-    // ================= 9. تشغيل وإيقاف الترجمة الفورية (الكاميرا تظل بحجمها الكامل دون أي تصغير) =================
+    // ================= 9. تشغيل وإيقاف الترجمة الفورية (< 1 ثانية) =================
     function syncAllScanButtonsUI() {
       const dict = UI_TRANSLATIONS[currentAppLang];
       const mainIcon = document.getElementById('translateBtnIcon');
@@ -2652,19 +1808,17 @@
         return;
       }
 
-      // التحقق من وجود مفتاح API إذا اختار المستخدم محركاً يتطلب مفتاحاً رسمياً
-      if (ENGINE_API_METADATA[activeTranslator] && !getSavedApiKeyForEngine(activeTranslator)) {
-        openView('engineSettingsModal');
-        notify(currentAppLang === 'ar' ? 'يرجى إدخال مفتاح API الرسمي للمحرك المختار أولاً' : 'Please enter the official API key first');
-        return;
-      }
-
       isScanning = !isScanning;
+      const camBox = document.getElementById('cameraBox');
+      const roiHandle = document.getElementById('roiHandle');
 
       if (isScanning) {
         warmupTranslationConnections();
-        // إبقاء الكاميرا بحجمها الطبيعي دون تصغير وقفل مربع التحديد فقط
-        setRoiBoxLockedState(true);
+        if (!(currentTabMode === 'tv' && isTvPaired)) {
+          camBox.classList.replace('h-56', 'h-28');
+          camBox.classList.replace('w-full', 'w-40');
+        }
+        roiHandle.classList.add('hidden');
         syncAllScanButtonsUI();
 
         lastGrayscaleGrid = null;
@@ -2705,7 +1859,10 @@
 
     function expandCameraForEdit() {
       stopOcrScanning();
-      setRoiBoxLockedState(false);
+      const camBox = document.getElementById('cameraBox');
+      camBox.classList.replace('h-28', 'h-56');
+      camBox.classList.replace('w-40', 'w-full');
+      document.getElementById('roiHandle').classList.remove('hidden');
     }
 
     function showWaitingForSubtitlesState() {
@@ -2719,11 +1876,10 @@
       const landOut = document.getElementById('landArabicOut');
       if (mainOut) {
         mainOut.textContent = waitMsg;
-        mainOut.style.opacity = '0.22';
+        mainOut.style.opacity = '0.55';
       }
       if (landOut) {
         landOut.textContent = waitMsg;
-        landOut.style.opacity = '0.22';
       }
       sendCrossDeviceEvent({ type: 'SUB_CLEAR' });
     }
@@ -2735,7 +1891,7 @@
       }
     }
 
-    // ================= 10. اقتصاص مربع القراءة فقط + بوابة السكون + قفل الثبات (مطابق للملف الأصلي الأول 100%) =================
+    // ================= 10. اقتصاص مربع القراءة فقط + بوابة السكون + قفل الثبات =================
     function getActiveVideoAndCropRect() {
       const isLandOpen = !document.getElementById('landscapeFullOverlay').classList.contains('hidden');
       const video = isLandOpen ? document.getElementById('landscapeVideo') : document.getElementById('mainVideo');
@@ -2811,6 +1967,7 @@
       return { changed: false, hasSubtitleContrast, gridSnapshot: lastGrayscaleGrid };
     }
 
+    // نفس خوارزمية عزل الحروف الأصلية بدقة 860px الكاملة + تصغير القص النهائي لتسريع Tesseract 3x بدون حرارة
     function prepareSmoothGrayscaleSubtitleCanvas(video, sx, sy, sw, sh, outCanvas) {
       const rawCanvas = document.getElementById('rawRoiCanvas');
       const rCtx = rawCanvas.getContext('2d', { willReadFrequently: true });
@@ -3222,7 +2379,7 @@
       scheduleNextFrameCheck(lastValidArSentence && !isWaitingStateDisplayed ? 135 : 45);
     }
 
-    // ================= 11. محركات الترجمة الحقيقية (كل محرك يتصل بسيرفره الرسمي فقط دون توجيه مخفي) =================
+    // ================= 11. محرك الترجمة المتوازي فائق السرعة (< 1s) =================
     function polishPureArabicGamingOutput(rawAr) {
       if (!rawAr) return '';
       const cleaned = rawAr
@@ -3235,206 +2392,18 @@
       return cleaned;
     }
 
-    async function callOfficialApiTranslator(engineId, engSentence, customKeyOverride = '') {
-      const apiKey = customKeyOverride || getSavedApiKeyForEngine(engineId);
-      if (!apiKey) return '';
-
-      const systemPrompt = 'Translate this English video game dialogue or UI text into natural, concise Arabic. Output ONLY the Arabic translation.';
-      const controller = new AbortController();
-      const tId = setTimeout(() => { try { controller.abort(); } catch (e) {} }, 3500);
-
-      try {
-        if (engineId === 'deepl_api') {
-          const isFreeKey = apiKey.endsWith(':fx');
-          const endpoint = isFreeKey
-            ? 'https://api-free.deepl.com/v2/translate'
-            : 'https://api.deepl.com/v2/translate';
-          const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'Authorization': `DeepL-Auth-Key ${apiKey}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              text: [engSentence],
-              source_lang: 'EN',
-              target_lang: 'AR'
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(tId);
-          if (!res.ok) return '';
-          const data = await res.json();
-          return polishPureArabicGamingOutput(data?.translations?.[0]?.text || '');
-        }
-
-        if (engineId === 'pro_gemini_2_5_flash') {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
-          const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: `${systemPrompt}\n\nText: ${engSentence}` }] }],
-              generationConfig: { temperature: 0.1, maxOutputTokens: 120 }
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(tId);
-          if (!res.ok) return '';
-          const data = await res.json();
-          const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          return polishPureArabicGamingOutput(raw);
-        }
-
-        if (engineId === 'pro_gpt_4o_mini') {
-          const res = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${apiKey}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              model: 'gpt-4o-mini',
-              messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: engSentence }
-              ],
-              temperature: 0.1,
-              max_tokens: 120
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(tId);
-          if (!res.ok) return '';
-          const data = await res.json();
-          return polishPureArabicGamingOutput(data?.choices?.[0]?.message?.content || '');
-        }
-
-        if (engineId === 'pro_claude_3_5_haiku') {
-          const res = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-              'x-api-key': apiKey,
-              'anthropic-version': '2023-06-01',
-              'anthropic-dangerous-direct-browser-access': 'true',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              model: 'claude-3-5-haiku-latest',
-              max_tokens: 120,
-              system: systemPrompt,
-              messages: [{ role: 'user', content: engSentence }]
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(tId);
-          if (!res.ok) return '';
-          const data = await res.json();
-          return polishPureArabicGamingOutput(data?.content?.[0]?.text || '');
-        }
-
-        if (engineId === 'pro_deepseek_v3') {
-          const res = await fetch('https://api.deepseek.com/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${apiKey}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              model: 'deepseek-chat',
-              messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: engSentence }
-              ],
-              temperature: 0.1,
-              max_tokens: 120
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(tId);
-          if (!res.ok) return '';
-          const data = await res.json();
-          return polishPureArabicGamingOutput(data?.choices?.[0]?.message?.content || '');
-        }
-      } catch (e) {
-        clearTimeout(tId);
-      }
-      return '';
-    }
-
-    async function testUserEngineApiKey() {
-      const sel = document.getElementById('translatorEngineSelect');
-      const chosenEng = sel ? sel.value : '';
-      const keyInput = document.getElementById('userCustomApiKeyInput');
-      const keyVal = keyInput ? keyInput.value.trim() : '';
-      const btn = document.getElementById('testApiKeyBtn');
-
-      if (!keyVal) {
-        notify(currentAppLang === 'ar' ? 'أدخل المفتاح الرسمي أولاً لإجراء الفحص' : 'Enter official API key first');
-        return;
-      }
-
-      if (btn) btn.textContent = 'جاري الفحص...';
-      const testResult = await callOfficialApiTranslator(chosenEng, 'Are you ready?', keyVal);
-
-      if (testResult) {
-        saveApiKeyForEngine(chosenEng, keyVal);
-        if (btn) btn.textContent = 'متصل رسمياً ✓';
-        notify(currentAppLang === 'ar' ? `تم الاتصال بالسيرفر الرسمي: "${testResult}" ✓` : `Official server connected: "${testResult}" ✓`);
-      } else {
-        if (btn) btn.textContent = 'فشل الاتصال ✕';
-        notify(currentAppLang === 'ar' ? 'السيرفر الرسمي رفض المفتاح — تأكد من صحته' : 'Official server rejected the key');
-      }
-      setTimeout(() => {
-        if (btn) btn.textContent = 'فحص الاتصال بالسيرفر';
-      }, 2600);
-    }
-
     async function translateFullSentenceInstant(engSentence) {
       const cacheKey = `${activeTranslator}::${engSentence.toLowerCase()}`;
       if (translationMemoryCache.has(cacheKey)) {
         return translationMemoryCache.get(cacheKey);
       }
 
-      // 1. إذا اختار المستخدم DeepL أو أحد محركات PRO، يتم الاتصال حصرياً بسيرفر الشركة الرسمي بدون توجيه إلى Google
-      if (ENGINE_API_METADATA[activeTranslator]) {
-        const officialAr = await callOfficialApiTranslator(activeTranslator, engSentence);
-        if (officialAr) {
-          setBoundedCache(cacheKey, officialAr);
-          return officialAr;
-        }
-        return '';
-      }
-
-      // 2. إذا اختار المستخدم Microsoft Translator، يتصل حصرياً بسيرفر MyMemory/Microsoft الرسمي
-      if (activeTranslator === 'microsoft_edge') {
-        const controllerMs = new AbortController();
-        const tMs = setTimeout(() => { try { controllerMs.abort(); } catch (e) {} }, 1200);
-        try {
-          const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(engSentence)}&langpair=en|ar`;
-          const r = await fetch(url, { signal: controllerMs.signal });
-          clearTimeout(tMs);
-          if (r.ok) {
-            const d = await r.json();
-            const ar = polishPureArabicGamingOutput(d?.responseData?.translatedText || '');
-            if (ar) {
-              setBoundedCache(cacheKey, ar);
-              return ar;
-            }
-          }
-        } catch (e) {
-          clearTimeout(tMs);
-        }
-        return '';
-      }
-
-      // 3. المحرك الافتراضي Google Translate (المتوازي فائق السرعة المطابق للملف الأصلي 100%)
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
         try { controller.abort(); } catch (e) {}
       }, 650);
 
-      // المسار 1: نقطة dict-chrome-ex السريعة جداً
+      // المسار 1: نقطة dict-chrome-ex السريعة جداً (تعيد نصاً مباشراً بأقل حجم بيانات)
       const fetchFastDict = async () => {
         const url = `https://translate.googleapis.com/translate_a/t?client=dict-chrome-ex&sl=en&tl=ar&q=${encodeURIComponent(engSentence)}`;
         const r = await fetch(url, { signal: controller.signal });
@@ -3489,41 +2458,12 @@
 
       if (!(currentTabMode === 'tv' && isTvPaired)) {
         const mainOut = document.getElementById('arabicTextOut');
-        const mainBox = document.getElementById('styledSubtitleBox');
-        const landOut = document.getElementById('landArabicOut');
-        const landBox = document.getElementById('landSubBox');
-
-        if (subStyleConfig.camouflageBlurMode) {
-          const sampledRgba = sampleLiveGameColorFromVideo();
-          [mainBox, landBox].forEach(b => {
-            if (b) {
-              b.style.backgroundColor = sampledRgba;
-              b.style.borderRadius = '14px';
-              b.style.backdropFilter = 'blur(12px)';
-              b.style.webkitBackdropFilter = 'blur(12px)';
-              b.style.boxShadow = `0 0 22px ${sampledRgba}`;
-            }
-          });
-        } else {
-          [mainBox, landBox].forEach(b => {
-            if (b) {
-              b.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
-              b.style.borderRadius = '0px';
-              b.style.backdropFilter = 'none';
-              b.style.webkitBackdropFilter = 'none';
-              b.style.boxShadow = 'none';
-            }
-          });
-        }
-
         if (mainOut) {
           mainOut.textContent = arText;
           mainOut.style.opacity = ((subStyleConfig.textOpacity ?? 100) / 100).toString();
         }
-        if (landOut) {
-          landOut.textContent = arText;
-          landOut.style.opacity = ((subStyleConfig.textOpacity ?? 100) / 100).toString();
-        }
+        const landOut = document.getElementById('landArabicOut');
+        if (landOut) landOut.textContent = arText;
       }
 
       if (isTvPaired) {
@@ -3535,75 +2475,65 @@
       }
     }
 
-    function syncApiKeyBoxVisibility(engineId) {
-      const box = document.getElementById('apiKeyInputContainer');
-      const titleEl = document.getElementById('apiKeyEngineTitle');
-      const hintEl = document.getElementById('apiKeyHelperHint');
-      const inputEl = document.getElementById('userCustomApiKeyInput');
-
-      if (!box) return;
-      if (ENGINE_API_METADATA[engineId]) {
-        box.classList.remove('hidden');
-        if (titleEl) titleEl.textContent = ENGINE_API_METADATA[engineId].title;
-        if (hintEl) hintEl.textContent = ENGINE_API_METADATA[engineId].hint;
-        if (inputEl) inputEl.value = getSavedApiKeyForEngine(engineId);
-      } else {
-        box.classList.add('hidden');
-      }
-    }
-
     function updateProModelsDropdownUI() {
+      const unlocked = isProUser || (trialActive && trialSecondsLeft > 0);
       const currentVal = document.getElementById('translatorEngineSelect')?.value || activeTranslator;
 
-      document.querySelectorAll('.engine-choice-row').forEach(row => {
-        const eng = row.getAttribute('data-eng');
+      document.querySelectorAll('.engine-choice-row').forEach(btn => {
+        const eng = btn.getAttribute('data-eng');
         const isSelected = eng === currentVal;
-        const sw = row.querySelector('.eng-switch');
-        if (sw) {
-          sw.classList.toggle('active', isSelected);
-          sw.setAttribute('aria-checked', String(isSelected));
+        const statusIcon = btn.querySelector('.eng-status-icon');
+        const proBadgeIcon = btn.querySelector('.eng-pro-badge-icon');
+
+        btn.style.backgroundColor = isSelected ? 'rgba(245, 166, 35, 0.10)' : 'transparent';
+
+        if (statusIcon) {
+          statusIcon.className = isSelected
+            ? 'eng-status-icon fa-solid fa-circle-check text-cosmo text-sm'
+            : 'eng-status-icon fa-regular fa-circle text-[var(--text-muted)] text-sm';
+        }
+        if (proBadgeIcon) {
+          if (isSelected && unlocked) {
+            proBadgeIcon.className = 'eng-pro-badge-icon fa-solid fa-circle-check text-cosmo text-sm';
+          } else if (unlocked) {
+            proBadgeIcon.className = 'eng-pro-badge-icon fa-solid fa-bolt text-cosmo text-xs';
+          } else {
+            proBadgeIcon.className = 'eng-pro-badge-icon fa-solid fa-crown text-cosmo text-xs';
+          }
         }
       });
     }
 
     function selectCustomTranslatorEngine(val) {
       if (val.startsWith('pro_')) {
-        if (!isProUser && !(trialActive && trialSecondsLeft > 0)) {
+        const unlocked = isProUser || (trialActive && trialSecondsLeft > 0);
+        if (!unlocked) {
           closeView('engineSettingsModal');
           openView('subModal');
+          notify(currentAppLang === 'ar' ? 'موديلات الذكاء الاصطناعي متاحة عند الاشتراك أو التجربة المجانية' : 'AI models require Pro subscription or Free Trial');
           return;
         }
       }
-
       const hiddenInput = document.getElementById('translatorEngineSelect');
       if (hiddenInput) hiddenInput.value = val;
-      syncApiKeyBoxVisibility(val);
       updateProModelsDropdownUI();
     }
 
     function applyEngineChanges() {
       const sel = document.getElementById('translatorEngineSelect');
-      const chosenEng = sel ? sel.value : 'google_gtx';
-
-      if (ENGINE_API_METADATA[chosenEng]) {
-        const keyInput = document.getElementById('userCustomApiKeyInput');
-        const keyVal = keyInput ? keyInput.value.trim() : '';
-        if (!keyVal) {
-          notify(currentAppLang === 'ar' ? 'يرجى إدخال مفتاح API الرسمي لهذا المحرك أولاً' : 'Please enter the official API key for this engine');
-          return;
-        }
-        saveApiKeyForEngine(chosenEng, keyVal);
+      if (sel && sel.value.startsWith('pro_') && !(isProUser || (trialActive && trialSecondsLeft > 0))) {
+        sel.value = 'google_gtx';
+        updateProModelsDropdownUI();
+        closeView('engineSettingsModal');
+        openView('subModal');
+        return;
       }
-
       activeReaderMode = document.getElementById('ocrReaderModeSelect').value;
-      activeTranslator = chosenEng;
-      localStorage.setItem('siyaq_selected_engine', chosenEng);
-
+      activeTranslator = sel ? sel.value : 'google_gtx';
       lastValidEngSentence = '';
       lastGrayscaleGrid = null;
       recentSubtitleLocks = [];
       translationMemoryCache.clear();
-      updateProModelsDropdownUI();
       closeView('engineSettingsModal');
       notify(currentAppLang === 'ar' ? 'تم حفظ وتطبيق المحرك ✓' : 'Engine applied ✓');
     }
@@ -3630,7 +2560,7 @@
     function scanQrLoop() {
       const video = document.getElementById('qrVideo');
       const canvas = document.getElementById('qrCanvas');
-      if (!qrStream || !document.getElementById('qrScannerModal').classList.contains('modal-open')) return;
+      if (!qrStream || document.getElementById('qrScannerModal').classList.contains('hidden')) return;
 
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvas.width = video.videoWidth;
@@ -3675,10 +2605,7 @@
 
     function pairFromPhoneScanner(codeStr) {
       if (mqttClient && mqttClient.connected && pairedRoomCode) {
-        try {
-          mqttClient.unsubscribe(`siyaq/tv/sec/${pairedRoomCode}`);
-          mqttClient.unsubscribe(`siyaq/tv/ocr/${pairedRoomCode}`);
-        } catch (e) {}
+        try { mqttClient.unsubscribe(`siyaq/tv/sec/${pairedRoomCode}`); } catch (e) {}
       }
 
       isTvPaired = true;
@@ -3686,37 +2613,34 @@
 
       if (mqttClient && mqttClient.connected) {
         mqttClient.subscribe(`siyaq/tv/sec/${pairedRoomCode}`);
-        mqttClient.subscribe(`siyaq/tv/ocr/${pairedRoomCode}`);
       }
 
       sendCrossDeviceEvent({
         type: 'PAIRED',
         code: pairedRoomCode,
-        tvSubMode: currentTvSubMode,
         style: subStyleConfig
       });
 
-      applyTvSubModeLayout();
+      document.getElementById('tvUnpairedSection').classList.add('hidden');
+      document.getElementById('cameraWorkspaceSection').classList.remove('hidden');
       updateSubtitleVisibilityForActiveMode();
 
+      if (!videoStreamObj) startCameraFeed();
       notify(currentAppLang === 'ar' ? 'تم الاقتران بالتلفاز بنجاح ✓' : 'Paired with TV ✓');
     }
 
     function handleRemoteTvUnpair() {
       if (mqttClient && mqttClient.connected && pairedRoomCode) {
-        try {
-          mqttClient.unsubscribe(`siyaq/tv/sec/${pairedRoomCode}`);
-          mqttClient.unsubscribe(`siyaq/tv/ocr/${pairedRoomCode}`);
-        } catch (e) {}
+        try { mqttClient.unsubscribe(`siyaq/tv/sec/${pairedRoomCode}`); } catch (e) {}
       }
       isTvPaired = false;
-      isScreenModeActive = false;
       pairedRoomCode = '';
       if (isScanning) stopOcrScanning();
       if (currentTabMode === 'tv') stopCameraFeed();
       updateSubtitleVisibilityForActiveMode();
       if (currentTabMode === 'tv') {
-        applyTvSubModeLayout();
+        document.getElementById('tvUnpairedSection').classList.remove('hidden');
+        document.getElementById('cameraWorkspaceSection').classList.add('hidden');
       }
       notify(currentAppLang === 'ar' ? 'تم إلغاء الاقتران من التلفاز ✓' : 'Unpaired from TV ✓');
     }
@@ -3725,92 +2649,78 @@
       if (window._tvStyleSyncTimer) clearTimeout(window._tvStyleSyncTimer);
       if (mqttClient && mqttClient.connected && pairedRoomCode) {
         mqttClient.publish(`siyaq/tv/sec/${pairedRoomCode}`, JSON.stringify({ type: 'UNPAIRED' }));
-        try {
-          mqttClient.unsubscribe(`siyaq/tv/sec/${pairedRoomCode}`);
-          mqttClient.unsubscribe(`siyaq/tv/ocr/${pairedRoomCode}`);
-        } catch (e) {}
+        try { mqttClient.unsubscribe(`siyaq/tv/sec/${pairedRoomCode}`); } catch (e) {}
       }
       isTvPaired = false;
-      isScreenModeActive = false;
       pairedRoomCode = '';
       if (isScanning) stopOcrScanning();
       if (currentTabMode === 'tv') stopCameraFeed();
       updateSubtitleVisibilityForActiveMode();
 
       if (currentTabMode === 'tv') {
-        applyTvSubModeLayout();
+        document.getElementById('tvUnpairedSection').classList.remove('hidden');
+        document.getElementById('cameraWorkspaceSection').classList.add('hidden');
       }
       notify(currentAppLang === 'ar' ? 'تم إلغاء الاقتران ✓' : 'Unpaired ✓');
     }
 
-    // ================= 13. التخصيص الفوري لمظهر الترجمة (التمويه الذكي يشتغل فقط عند تفعيله) =================
+    // ================= 13. التخصيص الفوري لمظهر وحدود الخلفية المتوازنة =================
     function applySubtitleStyles() {
       const font = document.getElementById('subFontFamily').value;
-      const isBold = isIosSwitchActive('subBoldSwitch');
+      const isBold = document.getElementById('subBoldCheck').checked;
       const size = parseInt(document.getElementById('rngFontSize').value);
       const tOp = parseInt(document.getElementById('rngTextOpacity').value);
+      const bOp = parseInt(document.getElementById('rngBgOpacity').value);
+      const bW = parseInt(document.getElementById('rngBgWidth').value);
+      const bH = parseInt(document.getElementById('rngBgHeight').value);
       const px = parseInt(document.getElementById('rngPosX').value);
       const py = parseInt(document.getElementById('rngPosY').value);
-      const strokeW = parseFloat(document.getElementById('rngStrokeWidth')?.value || '0');
-      const camBlur = isIosSwitchActive('smartCamouflageSwitch');
 
-      subStyleConfig = {
-        ...subStyleConfig,
-        fontFamily: font,
-        isBold,
-        fontSize: size,
-        textOpacity: tOp,
-        posX: px,
-        posY: py,
-        strokeWidthDp: strokeW,
-        camouflageBlurMode: camBlur
-      };
+      subStyleConfig = { ...subStyleConfig, fontFamily: font, isBold, fontSize: size, textOpacity: tOp, bgOpacity: bOp, bgWidth: bW, bgHeight: bH, posX: px, posY: py };
 
       document.getElementById('lblFontSize').textContent = size + 'px';
       document.getElementById('lblTextOpacity').textContent = tOp + '%';
+      document.getElementById('lblBgOpacity').textContent = bOp + '%';
+      document.getElementById('lblBgWidth').textContent = bW + '%';
+      document.getElementById('lblBgHeight').textContent = bH + 'px';
       document.getElementById('lblPosX').textContent = px + '%';
       document.getElementById('lblPosY').textContent = py + '%';
-      const lblStroke = document.getElementById('lblStrokeWidth');
-      if (lblStroke) lblStroke.textContent = strokeW + 'px';
 
-      const bgRgba = camBlur ? sampleLiveGameColorFromVideo() : 'rgba(0, 0, 0, 0.85)';
+      const rgbBg = hexToRgb(subStyleConfig.bgColor);
+      const bgRgba = `rgba(${rgbBg.r}, ${rgbBg.g}, ${rgbBg.b}, ${bOp / 100})`;
+      const padV = bH;
+      const padH = Math.max(8, Math.round(bH * 1.45));
 
       ['previewMockSubBox', 'styledSubtitleBox', 'landSubBox'].forEach(boxId => {
         const b = document.getElementById(boxId);
         if (b) {
           b.style.backgroundColor = bgRgba;
-          b.style.borderRadius = camBlur ? '14px' : '0px';
-          b.style.backdropFilter = camBlur ? 'blur(12px)' : 'none';
-          b.style.webkitBackdropFilter = camBlur ? 'blur(12px)' : 'none';
-          b.style.boxShadow = camBlur ? `0 0 20px ${bgRgba}` : 'none';
-          b.style.width = 'max-content';
-          b.style.maxWidth = '92%';
+          b.style.borderRadius = '0px';
+          b.style.width = 'fit-content';
+          b.style.maxWidth = bW + '%';
           if (boxId === 'previewMockSubBox') {
             b.style.left = px + '%';
             b.style.top = py + '%';
           } else {
             b.style.left = '50%';
-            b.style.top = '52%';
+            b.style.top = '50%';
           }
+          b.style.paddingTop = padV + 'px';
+          b.style.paddingBottom = padV + 'px';
+          b.style.paddingLeft = padH + 'px';
+          b.style.paddingRight = padH + 'px';
         }
       });
-
-      const sCol = subStyleConfig.strokeColor || '#050507';
-      const strokeShadow = strokeW > 0
-        ? `-1.5px -1.5px 0 ${sCol}, 1.5px -1.5px 0 ${sCol}, -1.5px 1.5px 0 ${sCol}, 1.5px 1.5px 0 ${sCol}, 0 2px 6px rgba(0,0,0,0.9)`
-        : 'none';
 
       ['arabicTextOut', 'previewMockSubText', 'landArabicOut'].forEach(txtId => {
         const t = document.getElementById(txtId);
         if (t) {
           t.style.fontFamily = font;
           t.style.color = subStyleConfig.textColor;
-          t.style.fontWeight = isBold ? '900' : '700';
+          t.style.opacity = (tOp / 100);
+          t.style.fontWeight = isBold ? '900' : '400';
           t.style.fontSize = size + 'px';
-          t.style.textShadow = strokeShadow;
-          if (!isWaitingStateDisplayed || txtId === 'previewMockSubText') {
-            t.style.opacity = (tOp / 100);
-          }
+          t.style.textShadow = bOp < 20 ? '0 2px 6px rgba(0, 0, 0, 0.95)' : 'none';
         }
       });
 
@@ -3855,27 +2765,26 @@
       applySubtitleStyles();
     }
 
-    function toggleLargeClearSub() {
-      const checked = isIosSwitchActive('largeClearSwitch');
-      document.getElementById('rngFontSize').value = checked ? 28 : 22;
+    function toggleLargeClearSub(checked) {
+      document.getElementById('rngFontSize').value = checked ? 30 : 20;
       applySubtitleStyles();
     }
 
     function resetSubtitleStyleDefaults() {
       subStyleConfig.textColor = '#FFFFFF';
       subStyleConfig.customTextColorSet = false;
-      subStyleConfig.strokeColor = '#050507';
+      subStyleConfig.bgColor = '#000000';
       document.getElementById('subFontFamily').value = "'Tajawal', sans-serif";
-      toggleIosSwitch('subBoldSwitch', true);
-      toggleIosSwitch('largeClearSwitch', false);
-      toggleIosSwitch('smartCamouflageSwitch', false);
-      document.getElementById('rngFontSize').value = 22;
+      document.getElementById('subBoldCheck').checked = true;
+      document.getElementById('rngFontSize').value = 24;
       document.getElementById('rngTextOpacity').value = 100;
+      document.getElementById('rngBgOpacity').value = 85;
+      document.getElementById('rngBgWidth').value = 85;
+      document.getElementById('rngBgHeight').value = 10;
       document.getElementById('rngPosX').value = 50;
       document.getElementById('rngPosY').value = 82;
-      document.getElementById('rngStrokeWidth').value = 0;
       document.getElementById('textColorPreviewCircle').style.backgroundColor = '#FFFFFF';
-      document.getElementById('strokeColorPreviewCircle').style.backgroundColor = '#050507';
+      document.getElementById('bgColorPreviewCircle').style.backgroundColor = '#000000';
       applySubtitleStyles();
       notify(currentAppLang === 'ar' ? 'تمت استعادة الإعدادات الافتراضية ✓' : 'Defaults restored ✓');
     }
@@ -3883,11 +2792,9 @@
     // ================= 14. طيف الألوان والقطارة =================
     function openColorSpectrumPicker(target) {
       activeColorTarget = target;
-      const titles = {
-        text: currentAppLang === 'ar' ? 'لون النص' : 'Text Color',
-        stroke: currentAppLang === 'ar' ? 'لون حدود الخط' : 'Stroke Color'
-      };
-      document.getElementById('colorModalTitle').textContent = titles[target] || titles.text;
+      document.getElementById('colorModalTitle').textContent = target === 'text'
+        ? (currentAppLang === 'ar' ? 'لون النص' : 'Text Color')
+        : (currentAppLang === 'ar' ? 'لون الخلفية' : 'Background Color');
       openView('colorPickerModal');
       drawSpectrumCanvas();
       buildColorGrid();
@@ -3978,9 +2885,9 @@
         subStyleConfig.textColor = hex;
         subStyleConfig.customTextColorSet = true;
         document.getElementById('textColorPreviewCircle').style.backgroundColor = hex;
-      } else if (activeColorTarget === 'stroke') {
-        subStyleConfig.strokeColor = hex;
-        document.getElementById('strokeColorPreviewCircle').style.backgroundColor = hex;
+      } else {
+        subStyleConfig.bgColor = hex;
+        document.getElementById('bgColorPreviewCircle').style.backgroundColor = hex;
       }
       applySubtitleStyles();
     }
@@ -3995,7 +2902,7 @@
       return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
     }
 
-    // ================= 15. وضع الملائمة والنوافذ المنزلقة من الأسفل =================
+    // ================= 15. وضع الملائمة والنوافذ =================
     function enterFullLandscape() {
       if (!videoStreamObj) startCameraFeed();
       document.getElementById('landscapeFullOverlay').classList.remove('hidden');
@@ -4031,17 +2938,12 @@
 
     function openView(id) {
       const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('hidden');
-      requestAnimationFrame(() => {
-        el.classList.add('modal-open');
-      });
+      if (el) el.classList.remove('hidden');
     }
 
     function closeView(id) {
       const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('modal-open');
+      if (el) el.classList.add('hidden');
     }
 
     function saveAndConfirmSettings(modalId) {
@@ -4065,11 +2967,11 @@
     }
 
     function downloadTvApkDirect() {
-      window.open('', '_blank');
+      window.open('https://github.com/alwdd59/SIYAQ-TV/releases/latest/download/SIYAQ-TV.apk', '_blank');
     }
 
     function copyTvDownloadLink() {
-      const link = '';
+      const link = 'https://github.com/alwdd59/SIYAQ-TV/releases/latest/download/SIYAQ-TV.apk';
       if (navigator.clipboard) navigator.clipboard.writeText(link);
       notify(currentAppLang === 'ar' ? 'تم نسخ رابط التحميل ✓' : 'Download link copied ✓');
     }
@@ -4084,779 +2986,6 @@
       if (toastTimer) clearTimeout(toastTimer);
       toastTimer = setTimeout(() => box.classList.add('hidden'), 2400);
     }
-  
-    // ============================================================================
-    // تحديث SIYAQ الشامل لتطبيق الجوال (النسخة النهائية الخفيفة كالريشة بدون وميض):
-    // 1. فصل وضع الكاميرا عن وضع الشاشة تماماً ومنع التداخل بينهما.
-    // 2. إضافة تخصيص (لون الخلفية، شفافية الخلفية، عرض الخلفية، طول الخلفية).
-    // 3. منع إرسال الحزم المكررة للتلفاز (Zero-Duplicate MQTT) ليعمل بالساعات دون تعليق.
-    // 4. تسريع ترجمة وضع الشاشة عبر الدمج الفوري + فترة ثبات ذكية تمنع اختفاء الترجمة اللحظي.
-    // ============================================================================
-
-    const GITHUB_TV_ACCOUNT = 'YOUR_NEW_GITHUB_USERNAME';
-    const DEFAULT_BG_COLOR = '#000000';
-    const DEFAULT_BG_OPACITY = 85;
-    const DEFAULT_BG_WIDTH = 92;
-    const DEFAULT_BG_HEIGHT = 10;
-
-    // متغيرات منع التكرار وتثبيت ترجمة الشاشة لمنع الوميض والتعليق
-    let lastSentScreenOverlaySignature = '';
-    let lastValidScreenOverlayItems = [];
-    let lastScreenTextSeenAt = 0;
-    const SCREEN_EMPTY_HOLD_MS = 750;
-
-    // إعادة ضبط إعدادات الخلفية الافتراضية لمنع بقاء التمويه عالقاً في وضع الكاميرا
-    subStyleConfig.bgColor = DEFAULT_BG_COLOR;
-    subStyleConfig.bgOpacity = DEFAULT_BG_OPACITY;
-    subStyleConfig.bgWidth = DEFAULT_BG_WIDTH;
-    subStyleConfig.bgHeight = DEFAULT_BG_HEIGHT;
-    subStyleConfig.camouflageBlurMode = false;
-    subStyleConfig.pixelateCamouflage = false;
-    subStyleConfig.placeBelowOriginal = true;
-
-    // 1. حقن أدوات التحكم بـ (لون الخلفية، شفافيتها، عرضها، طولها) داخل نافذة تخصيص المظهر تلقائياً
-    (function injectBackgroundCustomizationControls() {
-      const smartSwitchBtn = document.getElementById('smartCamouflageSwitch');
-      if (smartSwitchBtn && smartSwitchBtn.parentElement) {
-        smartSwitchBtn.parentElement.id = 'smartCamouflageRowContainer';
-      }
-
-      const appearanceModal = document.getElementById('subAppearanceModal');
-      if (!appearanceModal || document.getElementById('bgCustomSectionCard')) return;
-
-      const posSectionHeader = appearanceModal.querySelector('[data-i18n="tvPosSectionTitle"]');
-      if (!posSectionHeader) return;
-
-      const bgSectionHtml = `
-        <div id="bgCustomSectionHeader" class="text-xs font-extrabold text-slate-300 px-1">خلفية الترجمة وأبعادها (لون، عرض، طول)</div>
-        <div id="bgCustomSectionCard" class="bg-[#0C0C10] rounded-3xl p-4 space-y-4 border border-slate-800">
-          <!-- لون الخلفية -->
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <button type="button" onclick="openColorSpectrumPicker('bg')" class="flex items-center gap-2 px-2 py-1 text-cosmo">
-              <i class="fa-solid fa-eye-dropper text-xs"></i>
-              <span id="bgColorPreviewCircle" class="w-5 h-5 rounded-md border border-white/40" style="background-color: #000000;"></span>
-            </button>
-            <span class="text-xs font-extrabold">لون الخلفية</span>
-          </div>
-
-          <!-- شفافية الخلفية -->
-          <div class="space-y-2 border-b border-slate-800 pb-3">
-            <div class="flex justify-between text-xs font-extrabold">
-              <span id="lblBgOpacity">85%</span>
-              <span>شفافية الخلفية</span>
-            </div>
-            <input type="range" id="rngBgOpacity" min="0" max="100" value="85" oninput="applySubtitleStyles()" class="w-full" />
-          </div>
-
-          <!-- عرض الخلفية -->
-          <div class="space-y-2 border-b border-slate-800 pb-3">
-            <div class="flex justify-between text-xs font-extrabold">
-              <span id="lblBgWidth">92%</span>
-              <span>عرض الخلفية</span>
-            </div>
-            <input type="range" id="rngBgWidth" min="25" max="100" value="92" oninput="applySubtitleStyles()" class="w-full" />
-          </div>
-
-          <!-- طول / ارتفاع الخلفية -->
-          <div class="space-y-2">
-            <div class="flex justify-between text-xs font-extrabold">
-              <span id="lblBgHeight">10px</span>
-              <span>طول الخلفية (الارتفاع)</span>
-            </div>
-            <input type="range" id="rngBgHeight" min="4" max="32" value="10" oninput="applySubtitleStyles()" class="w-full" />
-          </div>
-        </div>
-      `;
-
-      posSectionHeader.insertAdjacentHTML('beforebegin', bgSectionHtml);
-    })();
-
-    // 2. دالة إظهار خيار "التمويه الذكي" في وضع الشاشة فقط وإخفائه تماماً في وضع الكاميرا والهاتف
-    function syncCamouflageVisibilityByMode() {
-      const camRow = document.getElementById('smartCamouflageRowContainer');
-      const isTvScreenMode = (currentTabMode === 'tv' && currentTvSubMode === 'screen');
-
-      if (camRow) {
-        if (isTvScreenMode) {
-          camRow.classList.remove('hidden');
-          camRow.style.display = 'flex';
-        } else {
-          camRow.classList.add('hidden');
-          camRow.style.display = 'none';
-          toggleIosSwitch('smartCamouflageSwitch', false);
-          subStyleConfig.camouflageBlurMode = false;
-          subStyleConfig.pixelateCamouflage = false;
-        }
-      }
-    }
-
-    // 3. تحديث التبديل بين وضع الهاتف ووضع التلفاز مع الفصل التام
-    switchMode = function(mode) {
-      if (currentTabMode === mode) return;
-
-      if (isScanning) stopOcrScanning();
-      if (mode === 'tv' && (!isTvPaired || currentTvSubMode === 'screen')) {
-        stopCameraFeed();
-      }
-
-      currentTabMode = mode;
-
-      const btnPhone = document.getElementById('tabBtnPhone');
-      const btnTv = document.getElementById('tabBtnTv');
-      const tvSubBar = document.getElementById('tvSubModeSelectorBar');
-      const tvUnpairedSec = document.getElementById('tvUnpairedSection');
-      const camWorkspaceSec = document.getElementById('cameraWorkspaceSection');
-      const screenWorkspaceSec = document.getElementById('tvScreenModeWorkspace');
-
-      if (mode === 'phone') {
-        btnPhone.className = 'flex-1 py-1.5 text-cosmo font-black text-sm flex items-center justify-center gap-2 transition-all';
-        btnTv.className = 'flex-1 py-1.5 font-extrabold text-sm text-[var(--text-muted)] flex items-center justify-center gap-2 transition-all';
-        tvSubBar.classList.add('hidden');
-        tvUnpairedSec.classList.add('hidden');
-        screenWorkspaceSec.classList.add('hidden');
-        camWorkspaceSec.classList.remove('hidden');
-      } else {
-        btnTv.className = 'flex-1 py-1.5 text-cosmo font-black text-sm flex items-center justify-center gap-2 transition-all';
-        btnPhone.className = 'flex-1 py-1.5 font-extrabold text-sm text-[var(--text-muted)] flex items-center justify-center gap-2 transition-all';
-        tvSubBar.classList.remove('hidden');
-        updateTvPairingHeroUI();
-        applyTvSubModeLayout();
-      }
-
-      syncCamouflageVisibilityByMode();
-      applySubtitleStyles();
-      refreshTrialUI();
-      updateSubtitleVisibilityForActiveMode();
-    };
-
-    // 4. الفصل التام بين وضع الكاميرا ووضع الشاشة وإبلاغ التلفزيون فوراً بالوضع المختار
-    selectTvSubMode = function(subMode) {
-      currentTvSubMode = subMode;
-      lastSentScreenOverlaySignature = '';
-      lastValidScreenOverlayItems = [];
-      screenOverlayMemory.clear();
-
-      const btnCam = document.getElementById('tvSubBtnCamera');
-      const btnScr = document.getElementById('tvSubBtnScreen');
-
-      if (subMode === 'camera') {
-        btnCam.style.backgroundColor = 'rgba(245, 166, 35, 0.15)';
-        btnCam.style.color = '#F5A623';
-        btnCam.style.border = '1px solid rgba(245, 166, 35, 0.38)';
-        btnCam.classList.add('font-black');
-
-        btnScr.style.backgroundColor = 'transparent';
-        btnScr.style.color = 'var(--text-muted)';
-        btnScr.style.border = '1px solid transparent';
-        btnScr.classList.remove('font-black');
-
-        isScreenModeActive = false;
-        const btnIcon = document.getElementById('screenModeToggleIcon');
-        const btnLabel = document.getElementById('screenModeToggleLabel');
-        if (btnIcon) btnIcon.className = 'fa-solid fa-play';
-        if (btnLabel) btnLabel.textContent = UI_TRANSLATIONS[currentAppLang].startScreenTransBtn;
-
-        syncCamouflageVisibilityByMode();
-        applySubtitleStyles();
-
-        if (isTvPaired) {
-          sendCrossDeviceEvent({
-            type: 'TV_MODE_SWITCH',
-            mode: 'camera',
-            tvSubMode: 'camera',
-            active: false,
-            style: subStyleConfig
-          });
-        }
-      } else {
-        btnScr.style.backgroundColor = 'rgba(245, 166, 35, 0.15)';
-        btnScr.style.color = '#F5A623';
-        btnScr.style.border = '1px solid rgba(245, 166, 35, 0.38)';
-        btnScr.classList.add('font-black');
-
-        btnCam.style.backgroundColor = 'transparent';
-        btnCam.style.color = 'var(--text-muted)';
-        btnCam.style.border = '1px solid transparent';
-        btnCam.classList.remove('font-black');
-
-        if (isScanning) stopOcrScanning();
-        stopCameraFeed();
-
-        syncCamouflageVisibilityByMode();
-        applySubtitleStyles();
-
-        if (isTvPaired) {
-          sendCrossDeviceEvent({
-            type: 'TV_MODE_SWITCH',
-            mode: 'screen_ocr',
-            tvSubMode: 'screen',
-            active: isScreenModeActive,
-            style: subStyleConfig
-          });
-        }
-      }
-
-      updateTvPairingHeroUI();
-      if (currentTabMode === 'tv') {
-        applyTvSubModeLayout();
-        updateSubtitleVisibilityForActiveMode();
-      }
-    };
-
-    // 5. عند مسح رمز QR من التلفزيون، يرسل الجوال الوضع المحدد بدقة (camera أو screen)
-    pairFromPhoneScanner = function(codeStr) {
-      if (mqttClient && mqttClient.connected && pairedRoomCode) {
-        try {
-          mqttClient.unsubscribe(`siyaq/tv/sec/${pairedRoomCode}`);
-          mqttClient.unsubscribe(`siyaq/tv/ocr/${pairedRoomCode}`);
-        } catch (e) {}
-      }
-
-      isTvPaired = true;
-      pairedRoomCode = codeStr;
-      lastSentScreenOverlaySignature = '';
-      syncCamouflageVisibilityByMode();
-
-      if (mqttClient && mqttClient.connected) {
-        mqttClient.subscribe(`siyaq/tv/sec/${pairedRoomCode}`);
-        mqttClient.subscribe(`siyaq/tv/ocr/${pairedRoomCode}`);
-      }
-
-      sendCrossDeviceEvent({
-        type: 'PAIRED',
-        code: pairedRoomCode,
-        tvSubMode: currentTvSubMode,
-        mode: currentTvSubMode === 'screen' ? 'screen_ocr' : 'camera',
-        active: currentTvSubMode === 'screen' ? isScreenModeActive : isScanning,
-        style: subStyleConfig
-      });
-
-      applyTvSubModeLayout();
-      updateSubtitleVisibilityForActiveMode();
-      notify(currentAppLang === 'ar' ? 'تم الاقتران بالتلفاز بنجاح ✓' : 'Paired with TV ✓');
-    };
-
-    // 6. تطبيق ألوان الخلفية وعرضها وطولها، وحصر التمويه الذكي في وضع الشاشة فقط
-    applySubtitleStyles = function() {
-      const font = document.getElementById('subFontFamily').value;
-      const isBold = isIosSwitchActive('subBoldSwitch');
-      const size = parseInt(document.getElementById('rngFontSize').value);
-      const tOp = parseInt(document.getElementById('rngTextOpacity').value);
-      const px = parseInt(document.getElementById('rngPosX').value);
-      const py = parseInt(document.getElementById('rngPosY').value);
-      const strokeW = parseFloat(document.getElementById('rngStrokeWidth')?.value || '0');
-
-      const bgOpEl = document.getElementById('rngBgOpacity');
-      const bgWEl = document.getElementById('rngBgWidth');
-      const bgHEl = document.getElementById('rngBgHeight');
-
-      const bgOp = bgOpEl ? parseInt(bgOpEl.value) : (subStyleConfig.bgOpacity ?? 85);
-      const bgW = bgWEl ? parseInt(bgWEl.value) : (subStyleConfig.bgWidth ?? 92);
-      const bgH = bgHEl ? parseInt(bgHEl.value) : (subStyleConfig.bgHeight ?? 10);
-
-      const isTvScreenMode = (currentTabMode === 'tv' && currentTvSubMode === 'screen');
-      const camBlur = isTvScreenMode ? isIosSwitchActive('smartCamouflageSwitch') : false;
-
-      subStyleConfig = {
-        ...subStyleConfig,
-        fontFamily: font,
-        isBold,
-        fontSize: size,
-        textOpacity: tOp,
-        bgOpacity: bgOp,
-        bgWidth: bgW,
-        bgHeight: bgH,
-        posX: px,
-        posY: py,
-        strokeWidthDp: strokeW,
-        camouflageBlurMode: camBlur,
-        pixelateCamouflage: camBlur,
-        placeBelowOriginal: !camBlur
-      };
-
-      lastSentScreenOverlaySignature = '';
-
-      document.getElementById('lblFontSize').textContent = size + 'px';
-      document.getElementById('lblTextOpacity').textContent = tOp + '%';
-      document.getElementById('lblPosX').textContent = px + '%';
-      document.getElementById('lblPosY').textContent = py + '%';
-
-      const lblStroke = document.getElementById('lblStrokeWidth');
-      if (lblStroke) lblStroke.textContent = strokeW + 'px';
-      const lblBgOp = document.getElementById('lblBgOpacity');
-      if (lblBgOp) lblBgOp.textContent = bgOp + '%';
-      const lblBgW = document.getElementById('lblBgWidth');
-      if (lblBgW) lblBgW.textContent = bgW + '%';
-      const lblBgH = document.getElementById('lblBgHeight');
-      if (lblBgH) lblBgH.textContent = bgH + 'px';
-
-      const rgbBg = hexToRgb(subStyleConfig.bgColor || '#000000');
-      const customBgRgba = `rgba(${rgbBg.r}, ${rgbBg.g}, ${rgbBg.b}, ${(bgOp / 100).toFixed(2)})`;
-      const padV = bgH;
-      const padH = Math.max(10, Math.round(bgH * 1.5));
-
-      ['previewMockSubBox', 'styledSubtitleBox', 'landSubBox'].forEach(boxId => {
-        const b = document.getElementById(boxId);
-        if (!b) return;
-
-        b.style.maxWidth = bgW + '%';
-        b.style.padding = `${padV}px ${padH}px`;
-
-        if (camBlur && boxId === 'previewMockSubBox') {
-          b.style.backgroundImage = 'repeating-linear-gradient(90deg, #1E293B 0px, #1E293B 8px, #334155 8px, #334155 16px, #0F172A 16px, #0F172A 24px)';
-          b.style.backgroundColor = '#1E293B';
-          b.style.borderRadius = '6px';
-        } else {
-          b.style.backgroundImage = 'none';
-          b.style.backgroundColor = customBgRgba;
-          b.style.borderRadius = '0px';
-          b.style.backdropFilter = 'none';
-          b.style.webkitBackdropFilter = 'none';
-          b.style.boxShadow = 'none';
-        }
-
-        if (boxId === 'previewMockSubBox') {
-          b.style.left = px + '%';
-          b.style.top = py + '%';
-        } else {
-          b.style.left = '50%';
-          b.style.top = '52%';
-        }
-      });
-
-      const sCol = subStyleConfig.strokeColor || '#050507';
-      const strokeShadow = strokeW > 0
-        ? `-1.5px -1.5px 0 ${sCol}, 1.5px -1.5px 0 ${sCol}, -1.5px 1.5px 0 ${sCol}, 1.5px 1.5px 0 ${sCol}, 0 2px 6px rgba(0,0,0,0.9)`
-        : 'none';
-
-      ['arabicTextOut', 'previewMockSubText', 'landArabicOut'].forEach(txtId => {
-        const t = document.getElementById(txtId);
-        if (t) {
-          t.style.fontFamily = font;
-          t.style.color = subStyleConfig.textColor;
-          t.style.fontWeight = isBold ? '900' : '700';
-          t.style.fontSize = size + 'px';
-          t.style.textShadow = strokeShadow;
-          if (!isWaitingStateDisplayed || txtId === 'previewMockSubText') {
-            t.style.opacity = (tOp / 100);
-          }
-        }
-      });
-
-      if (isTvPaired) {
-        const now = performance.now();
-        const sendStylePacket = () => {
-          window._lastStyleSentAt = performance.now();
-          if (currentTvSubMode === 'screen') {
-            sendCrossDeviceEvent({
-              type: 'STYLE_UPDATE',
-              tvSubMode: 'screen',
-              style: subStyleConfig
-            });
-          } else {
-            const previewTxt = lastValidArSentence || (currentAppLang === 'ar' ? 'معاينة حية لمظهر وموقع الترجمة' : 'Live Subtitle Preview');
-            sendCrossDeviceEvent({
-              type: 'SUB_UPDATE',
-              tvSubMode: 'camera',
-              text: previewTxt,
-              style: subStyleConfig
-            });
-          }
-        };
-
-        if (!window._lastStyleSentAt || (now - window._lastStyleSentAt) >= 40) {
-          sendStylePacket();
-        } else {
-          if (window._tvStyleSyncTimer) clearTimeout(window._tvStyleSyncTimer);
-          window._tvStyleSyncTimer = setTimeout(sendStylePacket, 40);
-        }
-      }
-    };
-
-    // 7. عرض الترجمة في وضع الهاتف ووضع الكاميرا باستخدام لون الخلفية المخصص (بدون تمويه في الكاميرا)
-    displayStabilizedSubtitle = function(arText) {
-      isWaitingStateDisplayed = false;
-
-      if (!(currentTabMode === 'tv' && isTvPaired)) {
-        const mainOut = document.getElementById('arabicTextOut');
-        const mainBox = document.getElementById('styledSubtitleBox');
-        const landOut = document.getElementById('landArabicOut');
-        const landBox = document.getElementById('landSubBox');
-
-        const rgbBg = hexToRgb(subStyleConfig.bgColor || '#000000');
-        const bgOp = (subStyleConfig.bgOpacity ?? 85) / 100;
-        const customBgRgba = `rgba(${rgbBg.r}, ${rgbBg.g}, ${rgbBg.b}, ${bgOp.toFixed(2)})`;
-        const padV = subStyleConfig.bgHeight ?? 10;
-        const padH = Math.max(10, Math.round(padV * 1.5));
-
-        [mainBox, landBox].forEach(b => {
-          if (b) {
-            b.style.backgroundImage = 'none';
-            b.style.backgroundColor = customBgRgba;
-            b.style.maxWidth = (subStyleConfig.bgWidth ?? 92) + '%';
-            b.style.padding = `${padV}px ${padH}px`;
-            b.style.borderRadius = '0px';
-            b.style.backdropFilter = 'none';
-            b.style.webkitBackdropFilter = 'none';
-            b.style.boxShadow = 'none';
-          }
-        });
-
-        if (mainOut) {
-          mainOut.textContent = arText;
-          mainOut.style.opacity = ((subStyleConfig.textOpacity ?? 100) / 100).toString();
-        }
-        if (landOut) {
-          landOut.textContent = arText;
-          landOut.style.opacity = ((subStyleConfig.textOpacity ?? 100) / 100).toString();
-        }
-      }
-
-      if (isTvPaired && currentTvSubMode === 'camera') {
-        sendCrossDeviceEvent({
-          type: 'SUB_UPDATE',
-          tvSubMode: 'camera',
-          text: arText,
-          style: subStyleConfig
-        });
-      }
-    };
-
-    // 8. دعم اختيار لون الخلفية في القطارة وطيف الألوان
-    openColorSpectrumPicker = function(target) {
-      activeColorTarget = target;
-      const titles = {
-        text: currentAppLang === 'ar' ? 'لون النص' : 'Text Color',
-        stroke: currentAppLang === 'ar' ? 'لون حدود الخط' : 'Stroke Color',
-        bg: currentAppLang === 'ar' ? 'لون الخلفية' : 'Background Color'
-      };
-      document.getElementById('colorModalTitle').textContent = titles[target] || titles.text;
-      openView('colorPickerModal');
-      drawSpectrumCanvas();
-      buildColorGrid();
-    };
-
-    setChosenColor = function(hex) {
-      document.getElementById('selectedColorBigSwatch').style.backgroundColor = hex;
-      if (activeColorTarget === 'text') {
-        subStyleConfig.textColor = hex;
-        subStyleConfig.customTextColorSet = true;
-        document.getElementById('textColorPreviewCircle').style.backgroundColor = hex;
-      } else if (activeColorTarget === 'stroke') {
-        subStyleConfig.strokeColor = hex;
-        document.getElementById('strokeColorPreviewCircle').style.backgroundColor = hex;
-      } else if (activeColorTarget === 'bg') {
-        subStyleConfig.bgColor = hex;
-        const bgCircle = document.getElementById('bgColorPreviewCircle');
-        if (bgCircle) bgCircle.style.backgroundColor = hex;
-      }
-      applySubtitleStyles();
-    };
-
-    resetSubtitleStyleDefaults = function() {
-      subStyleConfig.textColor = '#FFFFFF';
-      subStyleConfig.customTextColorSet = false;
-      subStyleConfig.strokeColor = '#050507';
-      subStyleConfig.bgColor = '#000000';
-      subStyleConfig.bgOpacity = 85;
-      subStyleConfig.bgWidth = 92;
-      subStyleConfig.bgHeight = 10;
-      subStyleConfig.camouflageBlurMode = false;
-      subStyleConfig.pixelateCamouflage = false;
-      subStyleConfig.placeBelowOriginal = true;
-
-      document.getElementById('subFontFamily').value = "'Tajawal', sans-serif";
-      toggleIosSwitch('subBoldSwitch', true);
-      toggleIosSwitch('largeClearSwitch', false);
-      toggleIosSwitch('smartCamouflageSwitch', false);
-      document.getElementById('rngFontSize').value = 22;
-      document.getElementById('rngTextOpacity').value = 100;
-      document.getElementById('rngPosX').value = 50;
-      document.getElementById('rngPosY').value = 82;
-      document.getElementById('rngStrokeWidth').value = 0;
-
-      const bgOpEl = document.getElementById('rngBgOpacity');
-      if (bgOpEl) bgOpEl.value = 85;
-      const bgWEl = document.getElementById('rngBgWidth');
-      if (bgWEl) bgWEl.value = 92;
-      const bgHEl = document.getElementById('rngBgHeight');
-      if (bgHEl) bgHEl.value = 10;
-
-      document.getElementById('textColorPreviewCircle').style.backgroundColor = '#FFFFFF';
-      document.getElementById('strokeColorPreviewCircle').style.backgroundColor = '#050507';
-      const bgCircle = document.getElementById('bgColorPreviewCircle');
-      if (bgCircle) bgCircle.style.backgroundColor = '#000000';
-
-      applySubtitleStyles();
-      notify(currentAppLang === 'ar' ? 'تمت استعادة الإعدادات الافتراضية ✓' : 'Defaults restored ✓');
-    };
-
-    // 9. تنظيف ذكي لنصوص الشاشة (استبعاد أرقام العدادات في يوتيوب والرموز العشوائية)
-    cleanScreenBlockText = function(rawText) {
-      if (!rawText) return '';
-      const str = String(rawText).trim();
-      if (/[\u0600-\u06FF]/.test(str)) return '';
-
-      const cleaned = str
-        .replace(/[\r\n]+/g, ' ')
-        .replace(/[^a-zA-Z0-9.,?!'"\-:;()/&\s]/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      if (!cleaned) return '';
-      const lettersOnly = cleaned.replace(/[^a-zA-Z]/g, '');
-      if (lettersOnly.length < 2) return '';
-      if (lettersOnly.length <= 4 && !/[aeiouyAEIOUY]/.test(lettersOnly)) return '';
-      return cleaned;
-    };
-
-    // 10. ترجمة فائقة السرعة لوضع الشاشة: تفحص الذاكرة (0ms) ثم تدمج الجمل في طلب واحد سريع
-    translateScreenBatchInstant = async function(englishList) {
-      const results = new Array(englishList.length).fill('');
-      const uncachedIndices = [];
-      const uncachedTexts = [];
-
-      for (let i = 0; i < englishList.length; i++) {
-        const en = englishList[i];
-        const normKey = en.toLowerCase().replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
-        const cacheKey = `${activeTranslator}::${en.toLowerCase()}`;
-
-        if (INSTANT_GAMING_SHORT_PHRASES[normKey]) {
-          results[i] = INSTANT_GAMING_SHORT_PHRASES[normKey];
-        } else if (translationMemoryCache.has(cacheKey)) {
-          results[i] = translationMemoryCache.get(cacheKey);
-        } else {
-          uncachedIndices.push(i);
-          uncachedTexts.push(en);
-        }
-      }
-
-      if (uncachedTexts.length === 0) return results;
-
-      if (uncachedTexts.length === 1) {
-        const singleAr = await translateFullSentenceInstant(uncachedTexts[0]);
-        results[uncachedIndices[0]] = singleAr || '';
-        return results;
-      }
-
-      if (activeTranslator === 'google_gtx') {
-        try {
-          const combinedPayload = uncachedTexts.join('\n');
-          const controller = new AbortController();
-          const tId = setTimeout(() => { try { controller.abort(); } catch (e) {} }, 1100);
-
-          const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(combinedPayload)}`;
-          const res = await fetch(url, { signal: controller.signal });
-          clearTimeout(tId);
-
-          if (res.ok) {
-            const data = await res.json();
-            const fullTranslatedText = Array.isArray(data) && Array.isArray(data[0])
-              ? data[0].map(seg => seg[0]).join('')
-              : '';
-            const splitLines = fullTranslatedText.split('\n').map(l => polishPureArabicGamingOutput(l));
-
-            if (splitLines.length === uncachedTexts.length) {
-              for (let k = 0; k < uncachedTexts.length; k++) {
-                const ar = splitLines[k] || '';
-                if (ar) {
-                  setBoundedCache(`${activeTranslator}::${uncachedTexts[k].toLowerCase()}`, ar);
-                  results[uncachedIndices[k]] = ar;
-                }
-              }
-              return results;
-            }
-          }
-        } catch (e) {}
-      }
-
-      const translatedParallel = await Promise.all(
-        uncachedTexts.map(txt => translateFullSentenceInstant(txt))
-      );
-      for (let m = 0; m < uncachedTexts.length; m++) {
-        results[uncachedIndices[m]] = translatedParallel[m] || '';
-      }
-      return results;
-    };
-
-    // 11. معالجة نصوص الشاشة مع قفل الثبات المكاني ومنع إرسال الحزم المكررة للتلفزيون نهائياً
-    handleIncomingTvScreenTextBlocks = async function(packet) {
-      if (isProcessingScreenBatch) {
-        pendingScreenPacket = packet;
-        return;
-      }
-      isProcessingScreenBatch = true;
-
-      try {
-        const rawBlocks = Array.isArray(packet.blocks) ? packet.blocks : [];
-        const frameId = packet.frameId || Date.now();
-        const screenW = packet.screenWidth || packet.vw || 1920;
-        const screenH = packet.screenHeight || packet.vh || 1080;
-
-        const validBlocks = [];
-        const textsToTranslate = [];
-        const preResolvedArabic = {};
-
-        for (let i = 0; i < rawBlocks.length; i++) {
-          const b = rawBlocks[i];
-          const cleanEn = cleanScreenBlockText(b.text || b.en || '');
-          if (!cleanEn) continue;
-
-          const coords = normalizeBlockCoordinates(b, screenW, screenH);
-          const stableId = b.id || buildStableSpatialId(coords, i);
-          const posKey = `${Math.round(coords.x * 16)}_${Math.round(coords.y * 16)}`;
-
-          let matchedMem = screenOverlayMemory.get(posKey);
-          if (!matchedMem || !isSameSubtitleLocked(cleanEn, matchedMem.en)) {
-            for (const memVal of screenOverlayMemory.values()) {
-              if (
-                Math.abs(memVal.coords.x - coords.x) < 0.08 &&
-                Math.abs(memVal.coords.y - coords.y) < 0.08 &&
-                isSameSubtitleLocked(cleanEn, memVal.en)
-              ) {
-                matchedMem = memVal;
-                break;
-              }
-            }
-          }
-
-          if (matchedMem && isSameSubtitleLocked(cleanEn, matchedMem.en)) {
-            const idx = validBlocks.length;
-            validBlocks.push({
-              id: stableId,
-              posKey,
-              en: matchedMem.en,
-              ...matchedMem.coords
-            });
-            preResolvedArabic[idx] = matchedMem.ar;
-          } else {
-            const idx = validBlocks.length;
-            validBlocks.push({
-              id: stableId,
-              posKey,
-              en: cleanEn,
-              ...coords
-            });
-            textsToTranslate.push(cleanEn);
-          }
-        }
-
-        if (validBlocks.length === 0) {
-          if (lastValidScreenOverlayItems.length > 0 && (Date.now() - lastScreenTextSeenAt) < SCREEN_EMPTY_HOLD_MS) {
-            isProcessingScreenBatch = false;
-            return;
-          }
-          screenOverlayMemory.clear();
-          lastValidScreenOverlayItems = [];
-          if (lastSentScreenOverlaySignature !== 'EMPTY') {
-            lastSentScreenOverlaySignature = 'EMPTY';
-            sendCrossDeviceEvent({
-              type: 'SCREEN_OVERLAY_BATCH',
-              frameId,
-              items: [],
-              style: subStyleConfig
-            });
-          }
-        } else {
-          lastScreenTextSeenAt = Date.now();
-          const newlyTranslatedList = textsToTranslate.length > 0
-            ? await translateScreenBatchInstant(textsToTranslate)
-            : [];
-
-          const newMemoryMap = new Map();
-          const overlayItems = [];
-
-          let transCounter = 0;
-          for (let i = 0; i < validBlocks.length; i++) {
-            const blk = validBlocks[i];
-            const ar = preResolvedArabic[i] !== undefined
-              ? preResolvedArabic[i]
-              : (newlyTranslatedList[transCounter++] || '');
-
-            if (!ar) continue;
-
-            newMemoryMap.set(blk.posKey, {
-              en: blk.en,
-              ar,
-              coords: { x: blk.x, y: blk.y, w: blk.w, h: blk.h }
-            });
-
-            overlayItems.push({
-              id: blk.id,
-              en: blk.en,
-              ar,
-              x: blk.x,
-              y: blk.y,
-              w: blk.w,
-              h: blk.h
-            });
-          }
-
-          screenOverlayMemory = newMemoryMap;
-          lastValidScreenOverlayItems = overlayItems;
-
-          const currentSignature = overlayItems
-            .map(it => `${it.ar}@${it.x.toFixed(2)},${it.y.toFixed(2)}`)
-            .join('|');
-
-          if (currentSignature !== lastSentScreenOverlaySignature) {
-            lastSentScreenOverlaySignature = currentSignature;
-            sendCrossDeviceEvent({
-              type: 'SCREEN_OVERLAY_BATCH',
-              frameId,
-              items: overlayItems,
-              style: subStyleConfig
-            });
-          }
-        }
-      } catch (e) {}
-
-      isProcessingScreenBatch = false;
-
-      if (pendingScreenPacket) {
-        const nextPacket = pendingScreenPacket;
-        pendingScreenPacket = null;
-        handleIncomingTvScreenTextBlocks(nextPacket);
-      }
-    };
-
-    // 12. تحديث روابط تحميل تطبيق التلفزيون لتعمل ديناميكياً مع أي حساب جديد بدون أي ربط بالحساب القديم
-    function resolveCurrentTvRepoBaseUrl() {
-      const host = window.location.hostname || '';
-      if (host.endsWith('.github.io')) {
-        const owner = host.split('.')[0];
-        if (owner && owner !== 'localhost') {
-          return `https://github.com/${owner}/SIYAQ-TV/releases/latest/download/SIYAQ-TV.apk`;
-        }
-      }
-      if (GITHUB_TV_ACCOUNT && GITHUB_TV_ACCOUNT !== 'YOUR_NEW_GITHUB_USERNAME') {
-        return `https://github.com/${GITHUB_TV_ACCOUNT}/SIYAQ-TV/releases/latest/download/SIYAQ-TV.apk`;
-      }
-      return '';
-    }
-
-    downloadTvApkDirect = function() {
-      const url = resolveCurrentTvRepoBaseUrl();
-      if (!url) {
-        notify(currentAppLang === 'ar' ? 'ضع اسم حسابك الجديد في متغير GITHUB_TV_ACCOUNT' : 'Set your new username in GITHUB_TV_ACCOUNT');
-        return;
-      }
-      window.open(url, '_blank');
-    };
-
-    copyTvDownloadLink = function() {
-      const link = resolveCurrentTvRepoBaseUrl();
-      if (!link) {
-        notify(currentAppLang === 'ar' ? 'ضع اسم حسابك الجديد في متغير GITHUB_TV_ACCOUNT' : 'Set your new username in GITHUB_TV_ACCOUNT');
-        return;
-      }
-      if (navigator.clipboard) navigator.clipboard.writeText(link);
-      notify(currentAppLang === 'ar' ? 'تم نسخ رابط التحميل ✓' : 'Download link copied ✓');
-    };
-
-    // تهيئة حالة رؤية التمويه الذكي عند تحميل الصفحة
-    syncCamouflageVisibilityByMode();
-
   </script>
 </body>
 </html>
