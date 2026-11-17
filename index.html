@@ -4591,8 +4591,109 @@
       notify(currentAppLang === 'ar' ? 'تمت استعادة الإعدادات الافتراضية ✓' : 'Defaults restored ✓');
     };
 
-// 9. محرك وضع الشاشة الفوري والدقيق (بدون ثواني تقديرية وبدون وميض)
+// 9. محرك وضع الشاشة فائق السرعة والدقة (بدون تأخير وبدون تراكم إطارات قديمة)
     window.lastSentScreenOverlaySignature = '';
+    window.latestTvFrameSeq = 0;
+
+    // قاموس فوري لأوامر القوائم والألعاب والتلفزيون (ترجمة في 0ms بدون انتظار الإنترنت)
+    Object.assign(INSTANT_GAMING_SHORT_PHRASES, {
+      'play': 'تشغيل',
+      'pause': 'إيقاف مؤقت',
+      'resume': 'استئناف',
+      'continue': 'متابعة',
+      'start': 'بدء',
+      'new game': 'لعبة جديدة',
+      'load game': 'تحميل لعبة',
+      'save game': 'حفظ اللعبة',
+      'save': 'حفظ',
+      'load': 'تحميل',
+      'settings': 'الإعدادات',
+      'options': 'الخيارات',
+      'controls': 'التحكم',
+      'display': 'الشاشة',
+      'audio': 'الصوت',
+      'video': 'الفيديو',
+      'graphics': 'الرسومات',
+      'general': 'عام',
+      'language': 'اللغة',
+      'subtitles': 'الترجمة',
+      'captions': 'الشرح النصي',
+      'back': 'رجوع',
+      'exit': 'خروج',
+      'quit': 'إنهاء',
+      'close': 'إغلاق',
+      'cancel': 'إلغاء',
+      'confirm': 'تأكيد',
+      'accept': 'قبول',
+      'decline': 'رفض',
+      'select': 'تحديد',
+      'apply': 'تطبيق',
+      'reset': 'إعادة ضبط',
+      'default': 'افتراضي',
+      'next': 'التالي',
+      'previous': 'السابق',
+      'skip': 'تخطي',
+      'home': 'الرئيسية',
+      'apps': 'التطبيقات',
+      'library': 'المكتبة',
+      'search': 'بحث',
+      'download': 'تحميل',
+      'install': 'تثبيت',
+      'delete': 'حذف',
+      'update': 'تحديث',
+      'sign in': 'تسجيل الدخول',
+      'account': 'الحساب',
+      'network': 'الشبكة',
+      'bluetooth': 'البلوتوث',
+      'about': 'حول',
+      'restart': 'إعادة التشغيل',
+      'on': 'تشغيل',
+      'off': 'إيقاف',
+      'enabled': 'مفعّل',
+      'disabled': 'معطّل',
+      'high': 'عالي',
+      'medium': 'متوسط',
+      'low': 'منخفض',
+      'auto': 'تلقائي',
+      'map': 'الخريطة',
+      'inventory': 'الحقيبة',
+      'items': 'العناصر',
+      'weapons': 'الأسلحة',
+      'journal': 'المذكرات',
+      'missions': 'المهام',
+      'quests': 'المهام',
+      'skills': 'المهارات',
+      'story': 'القصة',
+      'online': 'أونلاين',
+      'social club': 'نادي روكستار',
+      'greet': 'تحية',
+      'antagonize': 'استفزاز',
+      'rob': 'سرقة',
+      'aim': 'تصويب',
+      'shoot': 'إطلاق',
+      'mount': 'ركوب',
+      'dismount': 'نزول',
+      'flee': 'إبعاد',
+      'calm': 'تهدئة',
+      'lead': 'قيادة',
+      'brush': 'تنظيف',
+      'feed': 'إطعام',
+      'pat': 'ملاطفة',
+      'loot': 'نهب',
+      'pick up': 'التقاط',
+      'drop': 'إسقاط',
+      'open': 'فتح',
+      'read': 'قراءة',
+      'sit': 'جلوس',
+      'sleep': 'نوم',
+      'craft': 'صناعة',
+      'cook': 'طبخ',
+      'buy': 'شراء',
+      'sell': 'بيع',
+      'donate': 'تبرع',
+      'upgrade': 'ترقية',
+      'restock': 'إعادة تزويد'
+    });
 
     subStyleConfig.smartHalfPlacement = true;
     subStyleConfig.placeBelowOriginal = false;
@@ -4607,7 +4708,6 @@
       };
     }
 
-    // تنظيف مرن يقبل جميع كلمات وعبارات الشاشة والقوائم (القصيرة والطويلة) ويستبعد الحروف العربية فقط
     cleanScreenBlockText = function(rawText) {
       if (!rawText) return '';
       var str = String(rawText).trim();
@@ -4625,55 +4725,107 @@
       return cleaned;
     };
 
-    // ترجمة فائقة السرعة لوضع الشاشة: القاموس الفوري (0ms) + الذاكرة المقفلة (0ms) + السباق المتوازي
+    // ترجمة فورية فائقة السرعة: قاموس 0ms + ذاكرة 0ms + دمج جميع جمل الشاشة في طلب واحد سريع (< 300ms)
     translateScreenBatchInstant = async function(englishList) {
       var results = new Array(englishList.length).fill('');
-      var pendingTasks = [];
+      var uncachedIndices = [];
+      var uncachedTexts = [];
 
       for (var i = 0; i < englishList.length; i++) {
-        (function(idx) {
-          var en = englishList[idx];
-          var normKey = en.toLowerCase().replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
+        var en = englishList[i];
+        var normKey = en.toLowerCase().replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
 
-          if (INSTANT_GAMING_SHORT_PHRASES[normKey]) {
-            results[idx] = INSTANT_GAMING_SHORT_PHRASES[normKey];
-            return;
-          }
+        if (INSTANT_GAMING_SHORT_PHRASES[normKey]) {
+          results[i] = INSTANT_GAMING_SHORT_PHRASES[normKey];
+          continue;
+        }
 
-          var lockedMatch = recentSubtitleLocks.find(function(item) {
-            return isSameSubtitleLocked(en, item.eng);
-          });
-          if (lockedMatch) {
-            results[idx] = lockedMatch.ar;
-            return;
-          }
+        var lockedMatch = recentSubtitleLocks.find(function(item) {
+          return isSameSubtitleLocked(en, item.eng);
+        });
+        if (lockedMatch) {
+          results[i] = lockedMatch.ar;
+          continue;
+        }
 
-          var cacheKey = activeTranslator + '::' + en.toLowerCase();
-          if (translationMemoryCache.has(cacheKey)) {
-            results[idx] = translationMemoryCache.get(cacheKey);
-            return;
-          }
+        var cacheKey = activeTranslator + '::' + en.toLowerCase();
+        if (translationMemoryCache.has(cacheKey)) {
+          results[i] = translationMemoryCache.get(cacheKey);
+          continue;
+        }
 
-          pendingTasks.push(
-            translateFullSentenceInstant(en).then(function(ar) {
-              if (ar) {
-                results[idx] = ar;
-                recentSubtitleLocks.unshift({ eng: en, ar: ar });
-                if (recentSubtitleLocks.length > 80) recentSubtitleLocks.pop();
+        uncachedIndices.push(i);
+        uncachedTexts.push(en);
+      }
+
+      if (uncachedTexts.length === 0) return results;
+
+      if (uncachedTexts.length === 1) {
+        var singleAr = await translateFullSentenceInstant(uncachedTexts[0]);
+        if (singleAr) {
+          results[uncachedIndices[0]] = singleAr;
+          recentSubtitleLocks.unshift({ eng: uncachedTexts[0], ar: singleAr });
+          if (recentSubtitleLocks.length > 100) recentSubtitleLocks.pop();
+        }
+        return results;
+      }
+
+      // دمج جميع نصوص الشاشة في طلب واحد سريع لمحرك Google لتظهر كلها دفعة واحدة في أجزاء من الثانية
+      if (activeTranslator === 'google_gtx') {
+        try {
+          var combinedPayload = uncachedTexts.join('\n');
+          var controller = new AbortController();
+          var tId = setTimeout(function() { try { controller.abort(); } catch (e) {} }, 650);
+
+          var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=' + encodeURIComponent(combinedPayload);
+          var res = await fetch(url, { signal: controller.signal });
+          clearTimeout(tId);
+
+          if (res.ok) {
+            var data = await res.json();
+            var fullTranslatedText = Array.isArray(data) && Array.isArray(data[0])
+              ? data[0].map(function(seg) { return seg[0]; }).join('')
+              : '';
+            var splitLines = fullTranslatedText.split('\n').map(function(l) {
+              return polishPureArabicGamingOutput(l);
+            });
+
+            if (splitLines.length === uncachedTexts.length) {
+              for (var k = 0; k < uncachedTexts.length; k++) {
+                var ar = splitLines[k] || '';
+                if (ar) {
+                  setBoundedCache(activeTranslator + '::' + uncachedTexts[k].toLowerCase(), ar);
+                  recentSubtitleLocks.unshift({ eng: uncachedTexts[k], ar: ar });
+                  results[uncachedIndices[k]] = ar;
+                }
               }
-            })
-          );
-        })(i);
+              if (recentSubtitleLocks.length > 100) recentSubtitleLocks.length = 100;
+              return results;
+            }
+          }
+        } catch (e) {}
       }
 
-      if (pendingTasks.length > 0) {
-        await Promise.all(pendingTasks);
-      }
+      // مسار متوازي احتياطي سريع
+      var tasks = uncachedTexts.map(function(txt, idx) {
+        return translateFullSentenceInstant(txt).then(function(ar) {
+          if (ar) {
+            results[uncachedIndices[idx]] = ar;
+            recentSubtitleLocks.unshift({ eng: txt, ar: ar });
+          }
+        });
+      });
+      await Promise.all(tasks);
+      if (recentSubtitleLocks.length > 100) recentSubtitleLocks.length = 100;
       return results;
     };
 
-    // معالجة نصوص الشاشة وتثبيت مواقعها وإرسال التغييرات الحقيقية فقط للتلفاز
+    // معالجة نصوص الشاشة مع إلغاء اللقطات المتأخرة فوراً (Zero Stale Frames)
     handleIncomingTvScreenTextBlocks = async function(packet) {
+      var frameSeq = Number(packet.frameSeq || packet.frameId || Date.now());
+      if (frameSeq < window.latestTvFrameSeq) return;
+      window.latestTvFrameSeq = frameSeq;
+
       if (isProcessingScreenBatch) {
         pendingScreenPacket = packet;
         return;
@@ -4698,14 +4850,14 @@
 
           var coords = normalizeBlockCoordinates(b, screenW, screenH);
           var stableId = b.id || buildStableSpatialId(coords, i);
-          var posKey = Math.round(coords.x * 16) + '_' + Math.round(coords.y * 16);
+          var posKey = Math.round(coords.x * 18) + '_' + Math.round(coords.y * 18);
 
           var matchedMem = screenOverlayMemory.get(posKey);
           if (!matchedMem || !isSameSubtitleLocked(cleanEn, matchedMem.en)) {
             screenOverlayMemory.forEach(function(memVal) {
               if (!matchedMem &&
-                Math.abs(memVal.coords.x - coords.x) < 0.10 &&
-                Math.abs(memVal.coords.y - coords.y) < 0.08 &&
+                Math.abs(memVal.coords.x - coords.x) < 0.08 &&
+                Math.abs(memVal.coords.y - coords.y) < 0.06 &&
                 isSameSubtitleLocked(cleanEn, memVal.en)
               ) {
                 matchedMem = memVal;
@@ -4742,19 +4894,29 @@
 
         if (validBlocks.length === 0) {
           screenOverlayMemory.clear();
-          if (window.lastSentScreenOverlaySignature !== 'EMPTY') {
-            window.lastSentScreenOverlaySignature = 'EMPTY';
-            sendCrossDeviceEvent({
-              type: 'SCREEN_OVERLAY_BATCH',
-              frameId: frameId,
-              items: [],
-              style: subStyleConfig
-            });
-          }
+          window.lastSentScreenOverlaySignature = 'EMPTY';
+          sendCrossDeviceEvent({
+            type: 'SCREEN_OVERLAY_BATCH',
+            frameId: frameId,
+            frameSeq: frameSeq,
+            items: [],
+            style: subStyleConfig
+          });
         } else {
           var newlyTranslatedList = textsToTranslate.length > 0
             ? await translateScreenBatchInstant(textsToTranslate)
             : [];
+
+          // إذا وصلت لقطة أحدث من التلفاز أثناء الترجمة، نتجاهل اللقطة القديمة فوراً حتى لا تتأخر الترجمة
+          if (frameSeq < window.latestTvFrameSeq) {
+            isProcessingScreenBatch = false;
+            if (pendingScreenPacket) {
+              var newerPkt = pendingScreenPacket;
+              pendingScreenPacket = null;
+              handleIncomingTvScreenTextBlocks(newerPkt);
+            }
+            return;
+          }
 
           var newMemoryMap = new Map();
           var overlayItems = [];
@@ -4796,6 +4958,7 @@
             sendCrossDeviceEvent({
               type: 'SCREEN_OVERLAY_BATCH',
               frameId: frameId,
+              frameSeq: frameSeq,
               items: overlayItems,
               style: subStyleConfig
             });
