@@ -4591,70 +4591,70 @@
       notify(currentAppLang === 'ar' ? 'تمت استعادة الإعدادات الافتراضية ✓' : 'Defaults restored ✓');
     };
 
-    // 9. محرك وضع الشاشة المدمج بجودة وسرعة وفلاتر النسخة الذهبية (بدون وميض أو ثقل)
-    let lastSentScreenOverlaySignature = '';
-    let lastValidScreenOverlayItems = [];
-    let lastScreenTextSeenAt = 0;
-    const SCREEN_EMPTY_HOLD_MS = 700;
+    // 9. محرك وضع الشاشة المدمج بجودة وسرعة وفلاتر النسخة الذهبية (محمي ضد التعارض)
+    window.lastSentScreenOverlaySignature = '';
+    window.lastValidScreenOverlayItems = [];
+    window.lastScreenTextSeenAt = 0;
+    window.SCREEN_EMPTY_HOLD_MS = 700;
 
-    // تفعيل قاعدة التموضع الذكي: النصف السفلي (الترجمة فوق النص) والنصف العلوي (الترجمة تحت النص)
     subStyleConfig.smartHalfPlacement = true;
     subStyleConfig.placeBelowOriginal = false;
 
-    const _baseApplySubtitleStyles = applySubtitleStyles;
-    applySubtitleStyles = function() {
-      subStyleConfig.smartHalfPlacement = true;
-      lastSentScreenOverlaySignature = '';
-      _baseApplySubtitleStyles();
-    };
+    if (!window._siyaqStylePatched) {
+      window._siyaqStylePatched = true;
+      var _origApplySubtitleStyles = applySubtitleStyles;
+      applySubtitleStyles = function() {
+        subStyleConfig.smartHalfPlacement = true;
+        window.lastSentScreenOverlaySignature = '';
+        _origApplySubtitleStyles();
+      };
+    }
 
-    // استخدام نفس فلتر النسخة الذهبية لعزل الجمل النظيفة واستبعاد تشويش يوتيوب والألعاب
     cleanScreenBlockText = function(rawText) {
       if (!rawText) return '';
-      const str = String(rawText).trim();
+      var str = String(rawText).trim();
       if (/[\u0600-\u06FF]/.test(str)) return '';
       return extractPureSubtitleSentence(str);
     };
 
-    // ترجمة سريعة لوضع الشاشة تعتمد على القاموس الفوري + قفل الثبات + السباق المتوازي للنسخة الذهبية
     translateScreenBatchInstant = async function(englishList) {
-      const results = new Array(englishList.length).fill('');
-      const pendingTasks = [];
+      var results = new Array(englishList.length).fill('');
+      var pendingTasks = [];
 
-      for (let i = 0; i < englishList.length; i++) {
-        const en = englishList[i];
-        const normKey = en.toLowerCase().replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
+      for (var i = 0; i < englishList.length; i++) {
+        (function(idx) {
+          var en = englishList[idx];
+          var normKey = en.toLowerCase().replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
 
-        // 1. القاموس الفوري (0ms)
-        if (INSTANT_GAMING_SHORT_PHRASES[normKey]) {
-          results[i] = INSTANT_GAMING_SHORT_PHRASES[normKey];
-          continue;
-        }
+          if (INSTANT_GAMING_SHORT_PHRASES[normKey]) {
+            results[idx] = INSTANT_GAMING_SHORT_PHRASES[normKey];
+            return;
+          }
 
-        // 2. فحص الجمل المقفلة مسبقاً بنفس خوارزمية الثبات (0ms)
-        const lockedMatch = recentSubtitleLocks.find(item => isSameSubtitleLocked(en, item.eng));
-        if (lockedMatch) {
-          results[i] = lockedMatch.ar;
-          continue;
-        }
+          var lockedMatch = recentSubtitleLocks.find(function(item) {
+            return isSameSubtitleLocked(en, item.eng);
+          });
+          if (lockedMatch) {
+            results[idx] = lockedMatch.ar;
+            return;
+          }
 
-        // 3. الذاكرة السريعة (0ms)
-        const cacheKey = `${activeTranslator}::${en.toLowerCase()}`;
-        if (translationMemoryCache.has(cacheKey)) {
-          results[i] = translationMemoryCache.get(cacheKey);
-          continue;
-        }
+          var cacheKey = activeTranslator + '::' + en.toLowerCase();
+          if (translationMemoryCache.has(cacheKey)) {
+            results[idx] = translationMemoryCache.get(cacheKey);
+            return;
+          }
 
-        // 4. الترجمة المتوازية الفورية (< 650ms)
-        pendingTasks.push(
-          translateFullSentenceInstant(en).then(ar => {
-            if (ar) {
-              results[i] = ar;
-              recentSubtitleLocks.unshift({ eng: en, ar });
-              if (recentSubtitleLocks.length > 60) recentSubtitleLocks.pop();
-            }
-          })
-        );
+          pendingTasks.push(
+            translateFullSentenceInstant(en).then(function(ar) {
+              if (ar) {
+                results[idx] = ar;
+                recentSubtitleLocks.unshift({ eng: en, ar: ar });
+                if (recentSubtitleLocks.length > 60) recentSubtitleLocks.pop();
+              }
+            })
+          );
+        })(i);
       }
 
       if (pendingTasks.length > 0) {
@@ -4663,7 +4663,6 @@
       return results;
     };
 
-    // معالجة نصوص الشاشة مع تثبيت الإحداثيات ومنع إرسال الرسائل المكررة للتلفاز
     handleIncomingTvScreenTextBlocks = async function(packet) {
       if (isProcessingScreenBatch) {
         pendingScreenPacket = packet;
@@ -4672,105 +4671,109 @@
       isProcessingScreenBatch = true;
 
       try {
-        const rawBlocks = Array.isArray(packet.blocks) ? packet.blocks : [];
-        const frameId = packet.frameId || Date.now();
-        const screenW = packet.screenWidth || packet.vw || 1920;
-        const screenH = packet.screenHeight || packet.vh || 1080;
+        var rawBlocks = Array.isArray(packet.blocks) ? packet.blocks : [];
+        var frameId = packet.frameId || Date.now();
+        var screenW = packet.screenWidth || packet.vw || 1920;
+        var screenH = packet.screenHeight || packet.vh || 1080;
 
-        const validBlocks = [];
-        const textsToTranslate = [];
-        const preResolvedArabic = {};
-        const maxBlocks = Math.min(rawBlocks.length, 8);
+        var validBlocks = [];
+        var textsToTranslate = [];
+        var preResolvedArabic = {};
+        var maxBlocks = Math.min(rawBlocks.length, 8);
 
-        for (let i = 0; i < maxBlocks; i++) {
-          const b = rawBlocks[i];
-          const cleanEn = cleanScreenBlockText(b.text || b.en || '');
+        for (var i = 0; i < maxBlocks; i++) {
+          var b = rawBlocks[i];
+          var cleanEn = cleanScreenBlockText(b.text || b.en || '');
           if (!cleanEn) continue;
 
-          const coords = normalizeBlockCoordinates(b, screenW, screenH);
-          const stableId = b.id || buildStableSpatialId(coords, i);
-          const posKey = `${Math.round(coords.x * 12)}_${Math.round(coords.y * 12)}`;
+          var coords = normalizeBlockCoordinates(b, screenW, screenH);
+          var stableId = b.id || buildStableSpatialId(coords, i);
+          var posKey = Math.round(coords.x * 12) + '_' + Math.round(coords.y * 12);
 
-          // البحث في الذاكرة المكانية لتثبيت نفس الجملة ونفس الإحداثيات ومنع اهتزاز مكانها
-          let matchedMem = screenOverlayMemory.get(posKey);
+          var matchedMem = screenOverlayMemory.get(posKey);
           if (!matchedMem || !isSameSubtitleLocked(cleanEn, matchedMem.en)) {
-            for (const memVal of screenOverlayMemory.values()) {
-              if (
+            screenOverlayMemory.forEach(function(memVal) {
+              if (!matchedMem &&
                 Math.abs(memVal.coords.x - coords.x) < 0.14 &&
                 Math.abs(memVal.coords.y - coords.y) < 0.10 &&
                 isSameSubtitleLocked(cleanEn, memVal.en)
               ) {
                 matchedMem = memVal;
-                break;
               }
-            }
+            });
           }
 
           if (matchedMem && isSameSubtitleLocked(cleanEn, matchedMem.en)) {
-            const idx = validBlocks.length;
+            var idx1 = validBlocks.length;
             validBlocks.push({
               id: stableId,
-              posKey,
+              posKey: posKey,
               en: matchedMem.en,
-              ...matchedMem.coords
+              x: matchedMem.coords.x,
+              y: matchedMem.coords.y,
+              w: matchedMem.coords.w,
+              h: matchedMem.coords.h
             });
-            preResolvedArabic[idx] = matchedMem.ar;
+            preResolvedArabic[idx1] = matchedMem.ar;
           } else {
-            const idx = validBlocks.length;
+            var idx2 = validBlocks.length;
             validBlocks.push({
               id: stableId,
-              posKey,
+              posKey: posKey,
               en: cleanEn,
-              ...coords
+              x: coords.x,
+              y: coords.y,
+              w: coords.w,
+              h: coords.h
             });
             textsToTranslate.push(cleanEn);
           }
         }
 
         if (validBlocks.length === 0) {
-          if (lastValidScreenOverlayItems.length > 0 && (Date.now() - lastScreenTextSeenAt) < SCREEN_EMPTY_HOLD_MS) {
+          if (window.lastValidScreenOverlayItems.length > 0 && (Date.now() - window.lastScreenTextSeenAt) < window.SCREEN_EMPTY_HOLD_MS) {
             isProcessingScreenBatch = false;
             return;
           }
           screenOverlayMemory.clear();
-          lastValidScreenOverlayItems = [];
-          if (lastSentScreenOverlaySignature !== 'EMPTY') {
-            lastSentScreenOverlaySignature = 'EMPTY';
+          window.lastValidScreenOverlayItems = [];
+          if (window.lastSentScreenOverlaySignature !== 'EMPTY') {
+            window.lastSentScreenOverlaySignature = 'EMPTY';
             sendCrossDeviceEvent({
               type: 'SCREEN_OVERLAY_BATCH',
-              frameId,
+              frameId: frameId,
               items: [],
               style: subStyleConfig
             });
           }
         } else {
-          lastScreenTextSeenAt = Date.now();
-          const newlyTranslatedList = textsToTranslate.length > 0
+          window.lastScreenTextSeenAt = Date.now();
+          var newlyTranslatedList = textsToTranslate.length > 0
             ? await translateScreenBatchInstant(textsToTranslate)
             : [];
 
-          const newMemoryMap = new Map();
-          const overlayItems = [];
-          let transCounter = 0;
+          var newMemoryMap = new Map();
+          var overlayItems = [];
+          var transCounter = 0;
 
-          for (let i = 0; i < validBlocks.length; i++) {
-            const blk = validBlocks[i];
-            const ar = preResolvedArabic[i] !== undefined
-              ? preResolvedArabic[i]
+          for (var j = 0; j < validBlocks.length; j++) {
+            var blk = validBlocks[j];
+            var ar = preResolvedArabic[j] !== undefined
+              ? preResolvedArabic[j]
               : (newlyTranslatedList[transCounter++] || '');
 
             if (!ar) continue;
 
             newMemoryMap.set(blk.posKey, {
               en: blk.en,
-              ar,
+              ar: ar,
               coords: { x: blk.x, y: blk.y, w: blk.w, h: blk.h }
             });
 
             overlayItems.push({
               id: blk.id,
               en: blk.en,
-              ar,
+              ar: ar,
               x: blk.x,
               y: blk.y,
               w: blk.w,
@@ -4779,17 +4782,17 @@
           }
 
           screenOverlayMemory = newMemoryMap;
-          lastValidScreenOverlayItems = overlayItems;
+          window.lastValidScreenOverlayItems = overlayItems;
 
-          const currentSignature = overlayItems
-            .map(it => `${it.ar}@${it.x.toFixed(2)},${it.y.toFixed(2)}`)
+          var currentSignature = overlayItems
+            .map(function(it) { return it.ar + '@' + it.x.toFixed(2) + ',' + it.y.toFixed(2); })
             .join('|');
 
-          if (currentSignature !== lastSentScreenOverlaySignature) {
-            lastSentScreenOverlaySignature = currentSignature;
+          if (currentSignature !== window.lastSentScreenOverlaySignature) {
+            window.lastSentScreenOverlaySignature = currentSignature;
             sendCrossDeviceEvent({
               type: 'SCREEN_OVERLAY_BATCH',
-              frameId,
+              frameId: frameId,
               items: overlayItems,
               style: subStyleConfig
             });
@@ -4800,29 +4803,28 @@
       isProcessingScreenBatch = false;
 
       if (pendingScreenPacket) {
-        const nextPacket = pendingScreenPacket;
+        var nextPacket = pendingScreenPacket;
         pendingScreenPacket = null;
         handleIncomingTvScreenTextBlocks(nextPacket);
       }
     };
 
-    // 10. تحديث روابط تحميل تطبيق التلفزيون ديناميكياً
     function resolveCurrentTvRepoBaseUrl() {
-      const host = window.location.hostname || '';
+      var host = window.location.hostname || '';
       if (host.endsWith('.github.io')) {
-        const owner = host.split('.')[0];
+        var owner = host.split('.')[0];
         if (owner && owner !== 'localhost') {
-          return `https://github.com/${owner}/SIYAQ-TV/releases/latest/download/SIYAQ-TV.apk`;
+          return 'https://github.com/' + owner + '/SIYAQ-TV/releases/latest/download/SIYAQ-TV.apk';
         }
       }
-      if (GITHUB_TV_ACCOUNT && GITHUB_TV_ACCOUNT !== 'YOUR_NEW_GITHUB_USERNAME') {
-        return `https://github.com/${GITHUB_TV_ACCOUNT}/SIYAQ-TV/releases/latest/download/SIYAQ-TV.apk`;
+      if (typeof GITHUB_TV_ACCOUNT !== 'undefined' && GITHUB_TV_ACCOUNT && GITHUB_TV_ACCOUNT !== 'YOUR_NEW_GITHUB_USERNAME') {
+        return 'https://github.com/' + GITHUB_TV_ACCOUNT + '/SIYAQ-TV/releases/latest/download/SIYAQ-TV.apk';
       }
       return '';
     }
 
     downloadTvApkDirect = function() {
-      const url = resolveCurrentTvRepoBaseUrl();
+      var url = resolveCurrentTvRepoBaseUrl();
       if (!url) {
         notify(currentAppLang === 'ar' ? 'ضع اسم حسابك الجديد في متغير GITHUB_TV_ACCOUNT' : 'Set your new username in GITHUB_TV_ACCOUNT');
         return;
@@ -4831,7 +4833,7 @@
     };
 
     copyTvDownloadLink = function() {
-      const link = resolveCurrentTvRepoBaseUrl();
+      var link = resolveCurrentTvRepoBaseUrl();
       if (!link) {
         notify(currentAppLang === 'ar' ? 'ضع اسم حسابك الجديد في متغير GITHUB_TV_ACCOUNT' : 'Set your new username in GITHUB_TV_ACCOUNT');
         return;
